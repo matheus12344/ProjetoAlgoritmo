@@ -1,4 +1,4 @@
-# Dr. André Fiker - Site Profissional
+# André Fiker - Site Profissional
 
 Site moderno e responsivo para o psicólogo clínico Dr. André Fiker, especialista em Terapia Comportamental.
 
