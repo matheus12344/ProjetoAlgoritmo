@@ -8,6 +8,7 @@ import { LPScheduling } from "@/components/landing-page/LP-Scheduling";
 import { LPFAQ } from "@/components/landing-page/LP-FAQ";
 import { WhatsAppSticky } from "@/components/landing-page/WhatsAppSticky";
 import Testimonials from "@/components/Testimonials";
+import { trackLeadClick } from "@/lib/ads-tracking";
 
 export default function LandingPageClient() {
   return (
@@ -39,6 +40,15 @@ export default function LandingPageClient() {
             <a
               href="https://wa.me/5511961820112"
               target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackLeadClick({
+                  channel: "whatsapp",
+                  ctaLocation: "lp_final_cta",
+                  ctaLabel: "Falar com André agora",
+                  destination: "https://wa.me/5511961820112",
+                })
+              }
               className="bg-white text-blue-600 hover:bg-slate-50 px-10 py-5 rounded-full text-xl font-bold shadow-xl transition-all hover:scale-105"
             >
               Falar com André agora

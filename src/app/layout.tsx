@@ -42,8 +42,6 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
   openGraph: {
@@ -89,26 +87,19 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
-        {/* Google tag (gtag.js) - AW-10966063764 */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10966063764"></script>
-        <script dangerouslySetInnerHTML={{ __html: `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'AW-10966063764');` }} />
-        {/* Google Ads Conversion Tracking - WhatsApp Click */}
-                <script dangerouslySetInnerHTML={{ __html: `
-                          document.addEventListener('click', function(e) {
-                                      var el = e.target.closest ? e.target.closest('a[href*="wa.me"], a[href*="whatsapp.com"], button') : null;
-                                                  if (!el) return;
-                                                              var isWA = false;
-                                                                          if (el.tagName === 'A' && el.href && (el.href.indexOf('wa.me') !== -1 || el.href.indexOf('whatsapp.com') !== -1)) {
-                                                                                        isWA = true;
-                                                                                                    }
-                                                                                                                if (el.tagName === 'BUTTON' && (el.textContent || '').match(/agendar|whatsapp/i)) {
-                                                                                                                              isWA = true;
-                                                                                                                                          }
-                                                                                                                                                      if (isWA && typeof gtag === 'function') {
-                                                                                                                                                                    gtag('event', 'conversion', {'send_to': 'AW-10966063764/eYEhCK_w8uYaEJS1g-0o'});
-                                                                                                                                                                                }
-                                                                                                                                                                                          }, true);
-                                                                                                                                                                                                  `}} />
+        {/* Google tag (gtag.js) - GA4 + Google Ads */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-8PBSESWNLH"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-8PBSESWNLH');
+              gtag('config', 'AW-10966063764');
+            `,
+          }}
+        />
       </head>
       <body
         className={`${inter.variable} ${sora.variable} antialiased bg-background text-foreground font-sans`}

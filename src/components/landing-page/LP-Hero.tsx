@@ -4,16 +4,19 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, Phone, MessageCircle, Heart, ShieldCheck } from "lucide-react";
+import { openTrackedPhoneCall, openTrackedWhatsApp } from "@/lib/ads-tracking";
 
 export function LPHero() {
   const handleWhatsAppClick = () => {
-    const phoneNumber = '5511961820112';
-    const message = encodeURIComponent("Olá André Fiker! 👋 Vi seu anúncio no Google e gostaria de agendar uma consulta em Guarulhos.");
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank', 'noopener,noreferrer');
+    openTrackedWhatsApp(
+      "Olá André Fiker! 👋 Vi seu anúncio no Google e gostaria de agendar uma consulta em Guarulhos.",
+      "lp_hero",
+      "Agendar via WhatsApp",
+    );
   };
 
   const handleCallClick = () => {
-    window.location.href = "tel:+5511961820112";
+    openTrackedPhoneCall("lp_hero", "Ligar Agora");
   };
 
   return (

@@ -2,12 +2,15 @@
 
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
+import { openTrackedWhatsApp } from "@/lib/ads-tracking";
 
 export function WhatsAppSticky() {
   const handleWhatsAppClick = () => {
-    const phoneNumber = '5511961820112';
-    const message = encodeURIComponent("Olá André Fiker! Gostaria de agendar uma consulta.");
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank', 'noopener,noreferrer');
+    openTrackedWhatsApp(
+      "Olá André Fiker! Gostaria de agendar uma consulta.",
+      "lp_sticky_button",
+      "Falar pelo WhatsApp",
+    );
   };
 
   return (

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Search, CalendarCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { openTrackedWhatsApp } from "@/lib/ads-tracking";
 
 const steps = [
   {
@@ -24,9 +25,11 @@ const steps = [
 
 export function LPScheduling() {
   const handleWhatsAppClick = () => {
-    const phoneNumber = '5511961820112';
-    const message = encodeURIComponent("Olá André Fiker! Gostaria de agendar minha primeira sessão.");
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank', 'noopener,noreferrer');
+    openTrackedWhatsApp(
+      "Olá André Fiker! Gostaria de agendar minha primeira sessão.",
+      "lp_scheduling",
+      "Começar Agora",
+    );
   };
 
   return (
