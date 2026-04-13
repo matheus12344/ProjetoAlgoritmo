@@ -1,0 +1,36 @@
+
+> nextjs_tailwind_shadcn_ts@0.1.0 dev
+> nodemon --exec "npx tsx server.ts" --watch server.ts --watch src --ext ts,tsx,js,jsx
+
+[33m[nodemon] 3.1.10[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): server.ts src\**\*[39m
+[33m[nodemon] watching extensions: ts,tsx,js,jsx[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+> Ready on http://localhost:3000
+> Socket.IO server running at ws://localhost:3000/api/socketio
+ ○ Compiling /terapia-guarulhos ...
+ GET /terapia-guarulhos 200 in 3.9s (compile: 3.6s, render: 307ms)
+ GET /terapia-guarulhos 200 in 159ms (compile: 8ms, render: 151ms)
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+> Ready on http://localhost:3000
+> Socket.IO server running at ws://localhost:3000/api/socketio
+ ○ Compiling /terapia-guarulhos ...
+ GET /terapia-guarulhos 200 in 3.9s (compile: 3.6s, render: 312ms)
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+> Ready on http://localhost:3000
+> Socket.IO server running at ws://localhost:3000/api/socketio
+ GET /terapia-guarulhos 200 in 3.5s (compile: 3.2s, render: 298ms)
+ GET /terapia-guarulhos 200 in 118ms (compile: 6ms, render: 112ms)
+^C[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting child process[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+> Ready on http://localhost:3000
+> Socket.IO server running at ws://localhost:3000/api/socketio
+^C^C^C

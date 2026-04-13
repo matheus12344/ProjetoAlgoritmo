@@ -1,6 +1,5 @@
 "use client";
 
-import Script from "next/script";
 import { LPHero } from "@/components/landing-page/LP-Hero";
 import { LPDemands } from "@/components/landing-page/LP-Demands";
 import { LPDifferences } from "@/components/landing-page/LP-Differences";
@@ -8,9 +7,17 @@ import { LPScheduling } from "@/components/landing-page/LP-Scheduling";
 import { LPFAQ } from "@/components/landing-page/LP-FAQ";
 import { WhatsAppSticky } from "@/components/landing-page/WhatsAppSticky";
 import Testimonials from "@/components/Testimonials";
-import { trackLeadClick } from "@/lib/ads-tracking";
+import { openTrackedWhatsApp } from "@/lib/ads-tracking";
 
 export default function LandingPageClient() {
+  const handleFinalWhatsAppClick = () => {
+    openTrackedWhatsApp(
+      "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular.",
+      "lp_final_cta",
+      "Falar com André agora",
+    );
+  };
+
   return (
     <main className="flex flex-col min-h-screen bg-white dark:bg-slate-950">
       <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 py-4">
@@ -37,22 +44,13 @@ export default function LandingPageClient() {
           <h2 className="text-3xl md:text-5xl font-bold mb-6">Pronto para dar o primeiro passo?</h2>
           <p className="text-xl text-blue-50 mb-10 opacity-90">Não deixe para amanhã o cuidado que você merece hoje. Estou aqui para te ouvir e ajudar.</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a
-              href="https://wa.me/5511961820112"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() =>
-                trackLeadClick({
-                  channel: "whatsapp",
-                  ctaLocation: "lp_final_cta",
-                  ctaLabel: "Falar com André agora",
-                  destination: "https://wa.me/5511961820112",
-                })
-              }
+            <button
+              onClick={handleFinalWhatsAppClick}
               className="bg-white text-blue-600 hover:bg-slate-50 px-10 py-5 rounded-full text-xl font-bold shadow-xl transition-all hover:scale-105"
+              type="button"
             >
               Falar com André agora
-            </a>
+            </button>
           </div>
         </div>
       </section>

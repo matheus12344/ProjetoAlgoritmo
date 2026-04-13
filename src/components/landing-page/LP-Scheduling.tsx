@@ -26,7 +26,7 @@ const steps = [
 export function LPScheduling() {
   const handleWhatsAppClick = () => {
     openTrackedWhatsApp(
-      "Olá André Fiker! Gostaria de agendar minha primeira sessão.",
+      "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular.",
       "lp_scheduling",
       "Começar Agora",
     );

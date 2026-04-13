@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     question: "Qual o valor da consulta?",
-    answer: "Os valores são alinhados durante o primeiro contato ou triagem, seguindo as orientações de ética profissional do Conselho Regional de Psicologia."
+    answer: "O valor da sessão é R$275. O atendimento é exclusivamente particular — não aceitamos convênios. O pagamento pode ser feito via Pix, cartão ou dinheiro."
   }
 ];
 
@@ -56,7 +56,7 @@ export function LPFAQ() {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <Accordion type="single" collapsible className="w-full space-y-4">
+          <Accordion type="single" collapsible defaultValue="item-4" className="w-full space-y-4">
             {faqs.map((faq, index) => (
               <AccordionItem 
                 key={index} 

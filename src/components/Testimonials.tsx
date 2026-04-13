@@ -24,17 +24,6 @@ export default function Testimonials() {
       avatar: "👩‍💼"
     },
     {
-      id: 2,
-      name: "Carlos Mendes",
-      age: 45,
-      treatment: "Terapia de Casal",
-      duration: "4 meses",
-      rating: 5,
-  content: "Estávamos à beira da separação, mas a terapia com André Fiker nos ajudou a reconstruir nossa comunicação. Hoje nosso relacionamento está mais forte do que nunca.",
-      result: "Relacionamento reconstruído e fortalecido",
-      avatar: "👨‍💼"
-    },
-    {
       id: 3,
       name: "Mariana Costa",
       age: 28,

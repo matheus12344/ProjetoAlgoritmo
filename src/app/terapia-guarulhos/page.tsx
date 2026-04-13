@@ -3,7 +3,7 @@ import Script from "next/script";
 import LandingPageClient from "./LandingPageClient";
 
 export const metadata: Metadata = {
-  title: "Psicólogo em Guarulhos | Terapia Comportamental | André Fiker",
+  title: "Psicólogo em Guarulhos | Atendimento Particular | André Fiker",
   description: "Busca psicólogo em Guarulhos? André Fiker oferece terapia comportamental para adultos. Atendimento presencial e online. Especialista em ansiedade, depressão e TDAH. Agende sua consulta!",
   keywords: ["psicólogo guarulhos", "terapia comportamental guarulhos", "psicólogo particular guarulhos", "terapia online", "ansiedade guarulhos", "depressão guarulhos", "TDAH adultos guarulhos"],
   alternates: {
