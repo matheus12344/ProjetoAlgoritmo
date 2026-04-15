@@ -1,13 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Brain, Smile, Users, TrendingUp, HeartHandshake, ShieldCheck } from "lucide-react";
+import { Brain, Smile, Users, TrendingUp, HeartHandshake, ShieldCheck, Heart } from "lucide-react";
 
 const demands = [
   {
     icon: Brain,
     title: "Ansiedade e Estresse",
     description: "Ferramentas práticas para lidar com a preocupação excessiva e o esgotamento."
+  },
+  {
+    icon: Heart,
+    title: "Ansiedade e Autoestima Feminina",
+    description: "Terapia especializada para mulheres que lidam com sobrecarga emocional, autoestima, pressões nos relacionamentos e ansiedade. Espaço seguro para se reconectar com o que importa."
   },
   {
     icon: Smile,
