@@ -31,12 +31,21 @@ export default function LandingPageClient() {
         </div>
       </nav>
 
-      <LPHero />
-      <LPDemands />
+      <div id="individual">
+        <LPHero />
+      </div>
+      <div id="ansiedade">
+        <LPDemands />
+      </div>
+      <span id="online" className="sr-only" aria-hidden="true" />
       <LPDifferences />
-      <LPScheduling />
+      <div id="agendar">
+        <LPScheduling />
+      </div>
       <Testimonials />
-      <LPFAQ />
+      <div id="faq">
+        <LPFAQ />
+      </div>
 
       {/* Final CTA Section */}
       <section className="py-24 bg-blue-600 dark:bg-blue-700 text-white text-center">
