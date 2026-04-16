@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     question: "Qual o valor da consulta?",
-    answer: "O valor da sessão é R$275. O atendimento é exclusivamente particular — não aceitamos convênios. O pagamento pode ser feito via Pix, cartão ou dinheiro."
+    answer: "O valor da sessão é R$250. O atendimento é exclusivamente particular — não aceitamos convênios. O pagamento pode ser feito via Pix, cartão ou dinheiro."
   }
 ];
 
