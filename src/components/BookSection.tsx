@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function BookSection() {
+  const whatsappMessage = 'Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular'
   const books = [
     {
       title: 'Breve Manual de Terapia para Leigos',
@@ -44,8 +45,7 @@ export default function BookSection() {
 
   const handleAgendarConsulta = (customMessage?: string) => {
     const phoneNumber = '5511961820112'
-    const defaultMessage = `Olá André Fiker! 👋\n\nGostaria de agendar uma sessão. Por favor, poderia me informar horários disponíveis e como procedemos para marcar? Obrigado.`
-    const message = encodeURIComponent(customMessage || defaultMessage)
+    const message = encodeURIComponent(customMessage || whatsappMessage)
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
   }
@@ -177,7 +177,7 @@ export default function BookSection() {
                       Comprar na Amazon
                     </a>
                     <button
-                      onClick={() => handleAgendarConsulta(`Olá André, tenho interesse no livro "${currentBook.title}" e gostaria de agendar uma consulta.`)}
+                      onClick={() => handleAgendarConsulta()}
                       className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-800 font-semibold rounded-lg border border-gray-200 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-all active:scale-95"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>

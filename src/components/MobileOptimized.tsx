@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Menu, ChevronRight, Phone, MessageCircle, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
+const whatsappUrl = 'https://wa.me/5511961820112?text=' + encodeURIComponent('Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular')
+
 // Mobile-optimized navigation
 export function MobileNavigation({ menuItems }: { menuItems: Array<{ label: string; href: string }> }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -101,7 +103,7 @@ export function MobileNavigation({ menuItems }: { menuItems: Array<{ label: stri
                     <span>(11) 96182-0112</span>
                   </Button>
                   <Button
-                    onClick={() => window.open('https://api.whatsapp.com/send?phone=5511961820112&text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20uma%20sess%C3%A3o', '_blank')}
+                    onClick={() => window.open(whatsappUrl, '_blank')}
                     className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white flex items-center justify-center space-x-2"
                   >
                     <MessageCircle className="w-4 h-4" />
@@ -161,7 +163,7 @@ export function MobileHero() {
         >
           <Button
             size="lg"
-            onClick={() => window.open('https://api.whatsapp.com/send?phone=5511961820112&text=Ol%C3%A1%2C%20estava%20no%20site%20e%20gostaria%20de%20agendar%20uma%20sess%C3%A3o', '_blank')}
+            onClick={() => window.open(whatsappUrl, '_blank')}
             className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-4 text-lg shadow-lg shadow-green-500/25"
           >
             <MessageCircle className="w-5 h-5 mr-2" />
@@ -306,7 +308,7 @@ export function MobileFAB() {
             whileTap={{ scale: 0.9 }}
           >
             <Button
-              onClick={() => window.open('https://api.whatsapp.com/send?phone=5511961820112&text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20uma%20sess%C3%A3o', '_blank')}
+              onClick={() => window.open(whatsappUrl, '_blank')}
               size="lg"
               className="w-14 h-14 rounded-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-lg shadow-green-500/25 p-0"
             >

@@ -6,6 +6,8 @@ import { ChevronDown, HelpCircle, Clock, Shield, CreditCard, Video, Users, Messa
 import { Card, CardContent } from '@/components/ui/card'
 import { useScrollAnimation, fadeInUpVariants, scaleInVariants } from '@/hooks/useScrollAnimation'
 
+const whatsappUrl = 'https://wa.me/5511961820112?text=' + encodeURIComponent('Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular')
+
 export default function FAQ() {
   const [openItem, setOpenItem] = useState<number | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
@@ -308,7 +310,7 @@ export default function FAQ() {
           </blockquote>
           <div className="flex justify-center">
             <motion.a
-              href="https://wa.me/5511961820112?text=Olá%20André%20Fiker%2C%20gostaria%20de%20agendar%20uma%20sessão"
+              href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 shadow-lg hover:shadow-xl"

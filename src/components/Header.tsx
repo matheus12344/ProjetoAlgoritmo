@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Phone } from 'lucide-react'
 
 export default function Header() {
+  const whatsappMessage = 'Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular'
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -21,11 +22,7 @@ export default function Header() {
   // Função para agendar consulta via WhatsApp
   const handleAgendarConsulta = () => {
     const phoneNumber = '5511961820112' // Número de contato
-    const message = encodeURIComponent(
-      `Olá André Fiker! 👋\n\n` +
-      `Gostaria de agendar uma consulta. Poderia me informar horários disponíveis?\n\n` +
-      `Obrigado!`
-    )
+    const message = encodeURIComponent(whatsappMessage)
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`
     // Abrir em nova aba para melhor experiência do usuário
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer')

@@ -7,7 +7,7 @@ import { openTrackedWhatsApp } from "@/lib/ads-tracking";
 export function WhatsAppSticky() {
   const handleWhatsAppClick = () => {
     openTrackedWhatsApp(
-      "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular.",
+      "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular",
       "lp_sticky_button",
       "Agendar pelo WhatsApp",
     );

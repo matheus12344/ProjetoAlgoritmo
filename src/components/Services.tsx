@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { useScrollAnimation, fadeInUpVariants, scaleInVariants, staggerContainer } from '@/hooks/useScrollAnimation'
 
 export default function Services() {
+  const whatsappMessage = 'Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular'
   const [selectedService, setSelectedService] = useState<string | null>(null)
   const [hoveredService, setHoveredService] = useState<string | null>(null)
   const { ref: sectionRef, isVisible: sectionVisible } = useScrollAnimation()
@@ -68,8 +69,7 @@ export default function Services() {
     setSelectedService(prev => (prev === service.id ? null : service.id))
 
     // build pre-filled message for WhatsApp (Português)
-    const message = `Olá André Fiker, tenho interesse no serviço "${service.title}" (${service.duration} - ${service.price}). Gostaria de agendar uma sessão e receber mais informações, por favor.`
-    const url = 'https://wa.me/' + clientWhatsApp + '?text=' + encodeURIComponent(message)
+    const url = 'https://wa.me/' + clientWhatsApp + '?text=' + encodeURIComponent(whatsappMessage)
 
     // open WhatsApp in a new tab
     if (typeof window !== 'undefined') {
@@ -350,7 +350,7 @@ export default function Services() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Button onClick={() => window.open('https://wa.me/5511961820112?text=' + encodeURIComponent('Olá André Fiker, gostaria de agendar uma sessão.'))} className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300">
+            <Button onClick={() => window.open('https://wa.me/5511961820112?text=' + encodeURIComponent(whatsappMessage))} className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300">
               <motion.div
                 className="flex items-center"
                 whileHover={{ x: 5 }}

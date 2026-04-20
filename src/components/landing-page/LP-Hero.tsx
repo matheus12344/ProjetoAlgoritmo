@@ -10,7 +10,7 @@ import { openTrackedPhoneCall, openTrackedWhatsApp } from "@/lib/ads-tracking";
 export function LPHero() {
   const handleWhatsAppClick = () => {
     openTrackedWhatsApp(
-      "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular.",
+      "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular",
       "lp_hero",
       "Agendar via WhatsApp",
     );

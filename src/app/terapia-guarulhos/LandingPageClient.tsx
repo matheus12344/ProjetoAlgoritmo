@@ -12,7 +12,7 @@ import { openTrackedWhatsApp } from "@/lib/ads-tracking";
 export default function LandingPageClient() {
   const handleFinalWhatsAppClick = () => {
     openTrackedWhatsApp(
-      "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular.",
+      "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular",
       "lp_final_cta",
       "Falar com André agora",
     );

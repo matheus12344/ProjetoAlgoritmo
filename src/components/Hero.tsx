@@ -6,11 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { Star, Phone, Mail, MapPin, CheckCircle, Calendar, Heart } from "lucide-react";
 
 export function Hero() {
+  const whatsappMessage = 'Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular'
+
   // Função para agendar consulta via WhatsApp
   const handleAgendarConsulta = (customMessage?: string) => {
     const phoneNumber = '5511961820112' // Número de contato do profissional
-    const defaultMessage = `Olá André Fiker! 👋\n\nGostaria de agendar uma sessão. Por favor, poderia me informar horários disponíveis e como procedemos para marcar? Obrigado.`
-    const message = encodeURIComponent(customMessage || defaultMessage)
+    const message = encodeURIComponent(customMessage || whatsappMessage)
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`
     // Abrir em nova aba para melhor experiência do usuário
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
@@ -148,7 +149,7 @@ export function Hero() {
                 whileTap={{ scale: 0.95 }}
               >
                 <Button
-                  onClick={() => handleAgendarConsulta('Olá André Fiker, gostaria de agendar uma sessão. Obrigado!')}
+                  onClick={() => handleAgendarConsulta()}
                   size="lg"
                   className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300"
                 >
