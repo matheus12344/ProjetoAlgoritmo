@@ -47,7 +47,7 @@ export function LPHero() {
             </h1>
 
             <p className="mx-auto mb-4 max-w-2xl text-base text-slate-600 dark:text-slate-400 sm:mb-5 sm:text-lg md:text-xl lg:mx-0">
-              Também chamada de Análise do Comportamento. R$250 por sessão de 50 min com psicólogo formado em Psicologia pela PUC-SP, com 11 anos de clínica e certificação em Mindfulness pela Universidade de Oxford. Não é terapia de convênio, não é clínica popular. É método com evidência científica, aplicado por um profissional com trajetória definida. Particular. Centro de Guarulhos ou online.
+              Também chamada de Análise do Comportamento. R$250 por sessão de 50 min com psicólogo formado em Psicologia pela PUC-SP, com 12 anos de clínica, especialização em Terapia Comportamental pelo ITCR-Campinas e certificação em Mindfulness pela Universidade de Oxford. Não é terapia de convênio, não é clínica popular. É método com evidência científica, aplicado por um profissional com trajetória definida. Particular. Centro de Guarulhos ou online.
             </p>
 
             <div className="mb-4 flex flex-col items-stretch justify-center gap-3 sm:mb-5 sm:flex-row sm:items-center lg:justify-start">
