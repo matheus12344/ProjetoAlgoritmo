@@ -12,7 +12,7 @@ const demands = [
   {
     icon: Heart,
     title: "Ansiedade e Autoestima Feminina",
-    description: "Terapia especializada para mulheres que lidam com sobrecarga emocional, autoestima, pressões nos relacionamentos e ansiedade. Espaço seguro para se reconectar com o que importa."
+    description: "Terapia Comportamental especializada para mulheres que lidam com sobrecarga emocional, autoestima, pressões nos relacionamentos e ansiedade. Espaço seguro para trabalhar o que mantém esses padrões no seu dia a dia."
   },
   {
     icon: Smile,
