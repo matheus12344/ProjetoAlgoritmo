@@ -100,7 +100,7 @@ export function Hero() {
               transition={{ delay: 0.5 }}
               className="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed"
             >
-              Sou especialista em Terapia Comportamental e atendo pacientes há 11 anos nos formatos presencial e online
+              Sou especialista em Terapia Comportamental e atendo pacientes há 12 anos, com especialização em Terapia Comportamental pelo ITCR-Campinas nos formatos presencial e online
             </motion.p>
 
             <motion.p className="text-md text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">

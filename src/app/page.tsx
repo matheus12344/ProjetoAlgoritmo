@@ -10,56 +10,18 @@ import BlogPreview from '@/components/BlogPreview'
 import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
-  title: 'Psicólogo em Guarulhos — André Fiker | Terapia Comportamental e Atendimento Online',
-  description: 'André Fiker - Psicólogo Clínico especialista em Terapia Comportamental. Atendimento presencial em Guarulhos e online. Agende sua sessão.',
-  keywords: 'psicólogo guarulhos, terapia comportamental, terapia cognitiva, atendimento online, psicólogo online, terapia de ansiedade, terapia de casal, TCC, análise do comportamento',
-  authors: [{ name: 'André Fiker' }],
-  creator: 'André Fiker',
-  publisher: 'André Fiker',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
+  title: 'Psicólogo em Guarulhos  André Fiker | Terapia Comportamental | Particular',
+  description: 'André Fiker, psicólogo clínico em Guarulhos. 12 anos em Terapia Comportamental. Especialização ITCR-Campinas, formação PUC-SP, certificação Mindfulness Oxford. Atendimento particular R$250, presencial ou online. Não atendo convênio.',
+  keywords: 'psicólogo guarulhos, terapia comportamental, psicólogo particular, terapia comportamental guarulhos, atendimento particular, ITCR, análise do comportamento, TCC',
   metadataBase: new URL('https://www.andrefiker.com.br'),
-  alternates: {
-    canonical: '/',
-  },
+  alternates: { canonical: '/' },
   openGraph: {
-    title: 'Psicólogo em Guarulhos — André Fiker | Terapia Comportamental',
-  description: 'André Fiker - Psicólogo Clínico especialista em Terapia Comportamental. Atendimento presencial em Guarulhos e online para todo o Brasil.',
+    title: 'Psicólogo em Guarulhos  André Fiker | Terapia Comportamental Particular',
+    description: 'Psicólogo clínico, 12 anos em Terapia Comportamental. Atendimento particular em Guarulhos e online. R$250.',
     url: 'https://www.andrefiker.com.br',
-  siteName: 'André Fiker - Psicólogo',
+    siteName: 'André Fiker - Psicólogo',
     locale: 'pt_BR',
     type: 'website',
-    images: [
-        {
-        url: '/images/andre-fiker-psicologo.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'André Fiker - Psicólogo Clínico',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Psicólogo em Guarulhos — André Fiker | Terapia Comportamental',
-  description: 'André Fiker - Psicólogo Clínico especialista em Terapia Comportamental. Atendimento presencial em Guarulhos e online para todo o Brasil.',
-    images: ['/images/andre-fiker-psicologo.jpg'],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  verification: {
-    google: 'your-google-verification-code',
   },
 }
 

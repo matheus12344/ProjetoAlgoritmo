@@ -344,7 +344,7 @@ export default function Testimonials() {
             {[
               { number: "+130", label: "Avaliações", icon: Star },
               { number: "+2.000", label: "Pacientes atendidos", icon: Users },
-              { number: "11+", label: "Anos de experiência", icon: TrendingUp }
+              { number: "12+", label: "Anos de experiência", icon: TrendingUp }
             ].map((stat, index) => (
               <motion.div
                 key={index}

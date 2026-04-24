@@ -28,7 +28,7 @@ export default function About() {
       icon: Briefcase,
       title: "Experiência Profissional",
       items: [
-        "+11 anos de experiência clínica",
+        "+12 anos de experiência clínica",
         {
           label: "Especialidades:",
           subitems: [
@@ -73,7 +73,7 @@ export default function About() {
             Sobre André Fiker
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Psicólogo clínico com especialização em terapia comportamental. 11 anos de experiência na clínica particular, comprometido com formação e atualização contínua para garantir a excelência no atendimento.
+            Psicólogo clínico com especialização em terapia comportamental. 12 anos de experiência na clínica particular, comprometido com formação e atualização contínua para garantir a excelência no atendimento.
           </p>
         </motion.div>
 
