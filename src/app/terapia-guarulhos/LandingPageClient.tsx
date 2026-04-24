@@ -7,7 +7,7 @@ import { LPScheduling } from "@/components/landing-page/LP-Scheduling";
 import { LPFAQ } from "@/components/landing-page/LP-FAQ";
 import { WhatsAppSticky } from "@/components/landing-page/WhatsAppSticky";
 import Testimonials from "@/components/Testimonials";
-import { openTrackedWhatsApp } from "@/lib/ads-tracking";
+import { openTrackedPhoneCall, openTrackedWhatsApp } from "@/lib/ads-tracking";
 
 export default function LandingPageClient() {
   const handleFinalWhatsAppClick = () => {
@@ -18,15 +18,23 @@ export default function LandingPageClient() {
     );
   };
 
+  const handleNavPhoneClick = () => {
+    openTrackedPhoneCall("lp_nav", "Telefone no topo");
+  };
+
   return (
     <main className="flex flex-col min-h-screen bg-white dark:bg-slate-950">
       <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 py-4">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           <span className="text-xl font-bold text-slate-900 dark:text-white">André Fiker <span className="text-blue-600">Psicólogo</span></span>
           <div className="flex gap-4">
-            <a href="tel:+5511961820112" className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-blue-600 flex items-center gap-1">
+            <button
+              onClick={handleNavPhoneClick}
+              type="button"
+              className="text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-blue-600 flex items-center gap-1"
+            >
               (11) 96182-0112
-            </a>
+            </button>
           </div>
         </div>
       </nav>

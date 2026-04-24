@@ -9,6 +9,7 @@ declare global {
 
 const ADS_SEND_TO = "AW-10966063764";
 const WHATSAPP_CONVERSION_SEND_TO = "AW-10966063764/eYEhCK_w8uYaEJS1g-0o";
+const TRACKING_NAVIGATION_DELAY_MS = 150;
 
 type LeadChannel = "whatsapp" | "phone";
 
@@ -87,5 +88,7 @@ export function openTrackedPhoneCall(ctaLocation: string, ctaLabel: string) {
     destination,
   });
 
-  window.location.href = destination;
+  window.setTimeout(() => {
+    window.location.href = destination;
+  }, TRACKING_NAVIGATION_DELAY_MS);
 }
