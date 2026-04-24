@@ -42,12 +42,12 @@ export function LPHero() {
             </Badge>
 
             <h1 className="mb-4 max-w-[11ch] text-3xl font-bold tracking-tight leading-[1.05] text-slate-900 dark:text-white sm:mb-5 sm:max-w-none sm:text-4xl md:text-5xl lg:text-6xl">
-              Psicólogo em Guarulhos
-              <span className="block text-blue-600">Atendimento Particular</span>
+              Terapia Comportamental em Guarulhos
+              <span className="block text-blue-600">Psicólogo Particular</span>
             </h1>
 
             <p className="mx-auto mb-4 max-w-2xl text-base text-slate-600 dark:text-slate-400 sm:mb-5 sm:text-lg md:text-xl lg:mx-0">
-              Terapia comportamental para adultos com atendimento presencial em Guarulhos e online, com foco em ansiedade, depressão, TDAH e relacionamentos.
+              Também chamada de Análise do Comportamento. R$250 por sessão de 50 min com psicólogo formado em Psicologia pela PUC-SP, com 11 anos de clínica e certificação em Mindfulness pela Universidade de Oxford. Não é terapia de convênio, não é clínica popular. É método com evidência científica, aplicado por um profissional com trajetória definida. Particular. Centro de Guarulhos ou online.
             </p>
 
             <div className="mb-4 flex flex-col items-stretch justify-center gap-3 sm:mb-5 sm:flex-row sm:items-center lg:justify-start">
