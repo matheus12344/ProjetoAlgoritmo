@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
-import { openTrackedWhatsApp } from "@/lib/ads-tracking";
+import { openTrackedWhatsApp } from "@/lib/contact-tracking";
 
 export function WhatsAppSticky() {
   const handleWhatsAppClick = () => {
