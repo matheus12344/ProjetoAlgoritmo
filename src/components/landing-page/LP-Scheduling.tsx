@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Search, CalendarCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { openTrackedWhatsApp } from "@/lib/ads-tracking";
+import { openTrackedWhatsApp } from "@/lib/contact-tracking";
 
 const steps = [
   {

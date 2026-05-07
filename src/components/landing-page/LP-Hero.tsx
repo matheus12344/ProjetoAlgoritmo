@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, Phone, MessageCircle, Heart, ShieldCheck } from "lucide-react";
-import { openTrackedPhoneCall, openTrackedWhatsApp } from "@/lib/ads-tracking";
+import { openTrackedPhoneCall, openTrackedWhatsApp } from "@/lib/contact-tracking";
 
 export function LPHero() {
   const handleWhatsAppClick = () => {

@@ -1,10 +1,35 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
-import { openTrackedWhatsApp } from "@/lib/ads-tracking";
+import { openTrackedWhatsApp } from "@/lib/contact-tracking";
 
 export function WhatsAppSticky() {
+  const [showMobileSticky, setShowMobileSticky] = useState(false);
+
+  useEffect(() => {
+    const updateMobileVisibility = () => {
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+      if (!isMobile) {
+        setShowMobileSticky(true);
+        return;
+      }
+
+      setShowMobileSticky(window.scrollY > window.innerHeight * 0.85);
+    };
+
+    updateMobileVisibility();
+    window.addEventListener("scroll", updateMobileVisibility, { passive: true });
+    window.addEventListener("resize", updateMobileVisibility);
+
+    return () => {
+      window.removeEventListener("scroll", updateMobileVisibility);
+      window.removeEventListener("resize", updateMobileVisibility);
+    };
+  }, []);
+
   const handleWhatsAppClick = () => {
     openTrackedWhatsApp(
       "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular",
@@ -20,7 +45,9 @@ export function WhatsAppSticky() {
       animate={{ scale: 1, opacity: 1 }}
       whileHover={{ scale: 1.04 }}
       whileTap={{ scale: 0.96 }}
-      className="fixed right-4 z-50 flex items-center gap-3 rounded-full bg-green-600 px-4 py-3 text-white shadow-2xl transition-all duration-300 hover:bg-green-500 md:right-6"
+      className={`fixed right-4 z-50 items-center gap-3 rounded-full bg-green-600 px-4 py-3 text-white shadow-2xl transition-all duration-300 hover:bg-green-500 md:right-6 ${
+        showMobileSticky ? "flex" : "hidden md:flex"
+      }`}
       style={{ bottom: "max(1rem, env(safe-area-inset-bottom))" }}
       aria-label="Agendar atendimento pelo WhatsApp"
       type="button"

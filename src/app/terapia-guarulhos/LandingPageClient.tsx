@@ -7,7 +7,7 @@ import { LPScheduling } from "@/components/landing-page/LP-Scheduling";
 import { LPFAQ } from "@/components/landing-page/LP-FAQ";
 import { WhatsAppSticky } from "@/components/landing-page/WhatsAppSticky";
 import Testimonials from "@/components/Testimonials";
-import { openTrackedPhoneCall, openTrackedWhatsApp } from "@/lib/ads-tracking";
+import { openTrackedPhoneCall, openTrackedWhatsApp } from "@/lib/contact-tracking";
 
 export default function LandingPageClient() {
   const handleFinalWhatsAppClick = () => {
@@ -45,8 +45,9 @@ export default function LandingPageClient() {
       <div id="ansiedade">
         <LPDemands />
       </div>
-      <span id="online" className="sr-only" aria-hidden="true" />
-      <LPDifferences />
+      <div id="online">
+        <LPDifferences />
+      </div>
       <div id="agendar">
         <LPScheduling />
       </div>
