@@ -205,10 +205,15 @@ export function Hero() {
                   transition={{ duration: 0.3 }}
                 >
                   <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center">
-                    <img 
+                    <img
                       src="/images/image1.jpg"
                       alt="Foto profissional André Fiker"
                       className="object-cover w-full h-full rounded-2xl"
+                      width="600"
+                      height="800"
+                      fetchPriority="high"
+                      loading="eager"
+                      decoding="async"
                     />
                     {/* Overlay Pattern */}
                     <div className="absolute inset-0 opacity-10">
