@@ -9,7 +9,7 @@ declare global {
 
 export const GOOGLE_ADS_ID = "AW-10966063764";
 export const CONTACT_CONVERSION_SEND_TO =
-  "AW-10966063764/eYEhCK_w8uYaEJSlg-Oo";
+  "AW-10966063764/eYEhCK_w8uYaEJS1g-0o";
 
 type ContactChannel = "whatsapp" | "phone";
 
