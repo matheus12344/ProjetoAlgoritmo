@@ -26,6 +26,44 @@ export const metadata: Metadata = {
 }
 
 export default function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "PsychologicalService",
+    "name": "André Fiker - Psicólogo Clínico",
+    "image": "https://www.andrefiker.com.br/images/image1.jpg",
+    "url": "https://www.andrefiker.com.br",
+    "telephone": "+5511961820112",
+    "description": "Psicólogo clínico em Guarulhos, especializado em Terapia Comportamental. 12 anos de experiência em atendimento particular.",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Rua Ramos de Azevedo, 158",
+      "addressLocality": "Guarulhos",
+      "addressRegion": "SP",
+      "postalCode": "07013-040",
+      "addressCountry": "BR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "-23.4542",
+      "longitude": "-46.5333"
+    },
+    "priceRange": "R$250",
+    "areaServed": {
+      "@type": "City",
+      "name": "Guarulhos"
+    },
+    "knowsAbout": ["Terapia Comportamental", "Análise do Comportamento", "TCC", "Mindfulness"],
+    "founder": {
+      "@type": "Person",
+      "name": "André Fiker",
+      "alumniOf": [
+        {"@type": "CollegeOrUniversity", "name": "PUC-SP"},
+        {"@type": "CollegeOrUniversity", "name": "ITCR-Campinas"},
+        {"@type": "CollegeOrUniversity", "name": "University of Oxford"}
+      ]
+    }
+  };
+
   return (
     <main className="min-h-screen bg-white">
       <script
@@ -139,6 +177,7 @@ export default function Home() {
       />
       
       <Header />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Hero />
       <About />
   <Services />
