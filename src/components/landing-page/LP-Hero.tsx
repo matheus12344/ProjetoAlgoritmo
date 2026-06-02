@@ -89,7 +89,7 @@ export function LPHero() {
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white">+11 Anos</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">+12 Anos</p>
                   <p className="text-xs text-slate-500">Experiência Clínica</p>
                 </div>
               </div>

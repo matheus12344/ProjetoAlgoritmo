@@ -6,7 +6,7 @@ import { CheckCircle2, Award, Zap, Heart, UserCheck } from "lucide-react";
 const differences = [
   {
     icon: Award,
-    title: "11 Anos de Prática Clínica",
+    title: "12 Anos de Prática Clínica",
     description: "Sólida experiência no tratamento de diversos quadros psicológicos, com foco em adultos."
   },
   {

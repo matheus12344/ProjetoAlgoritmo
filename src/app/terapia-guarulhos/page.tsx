@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Psicólogo em Guarulhos | André Fiker - Terapia Comportamental",
-    description: "Atendimento psicológico especializado em Guarulhos e Online. Recupere seu equilíbrio emocional com quem tem mais de 11 anos de experiência.",
+    description: "Atendimento psicológico especializado em Guarulhos e Online. Recupere seu equilíbrio emocional com quem tem mais de 12 anos de experiência.",
     url: "https://www.andrefiker.com.br/terapia-guarulhos",
     siteName: "André Fiker Psicólogo",
     images: [
