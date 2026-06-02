@@ -5,6 +5,7 @@ import { LPDemands } from "@/components/landing-page/LP-Demands";
 import { LPDifferences } from "@/components/landing-page/LP-Differences";
 import { LPScheduling } from "@/components/landing-page/LP-Scheduling";
 import { LPFAQ } from "@/components/landing-page/LP-FAQ";
+import { DoctoraliaWidget } from "@/components/landing-page/DoctoraliaWidget";
 import { WhatsAppSticky } from "@/components/landing-page/WhatsAppSticky";
 import Testimonials from "@/components/Testimonials";
 import { openTrackedPhoneCall, openTrackedWhatsApp } from "@/lib/contact-tracking";
@@ -52,6 +53,7 @@ export default function LandingPageClient() {
         <LPScheduling />
       </div>
       <Testimonials />
+      <DoctoraliaWidget />
       <div id="faq">
         <LPFAQ />
       </div>
