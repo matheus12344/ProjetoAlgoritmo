@@ -37,12 +37,16 @@ function pushDataLayerEvent(event: string, payload: Record<string, unknown>) {
   window.dataLayer.push({ event, ...payload });
 }
 
-export function trackContactAttempt(options: ContactClickOptions) {
+export function trackContactAttempt(
+  options: ContactClickOptions,
+  onTracked?: () => void,
+) {
   if (typeof window === "undefined") {
     return;
   }
 
   if (typeof window.gtag !== "function") {
+    onTracked?.();
     return;
   }
 
@@ -54,9 +58,18 @@ export function trackContactAttempt(options: ContactClickOptions) {
     ...metadata,
   });
 
+  let fired = false;
+  const complete = () => {
+    if (fired) return;
+    fired = true;
+    onTracked?.();
+  };
+
   window.gtag("event", "conversion", {
     send_to: CONTACT_CONVERSION_SEND_TO,
+    transport_type: "beacon",
     ...metadata,
+    ...(onTracked ? { event_callback: complete } : {}),
   });
 
   window.gtag(
@@ -64,9 +77,14 @@ export function trackContactAttempt(options: ContactClickOptions) {
     options.channel === "whatsapp" ? "whatsapp_click" : "phone_click",
     {
       send_to: GOOGLE_ADS_ID,
+      transport_type: "beacon",
       ...metadata,
     },
   );
+
+  if (onTracked) {
+    setTimeout(complete, 400);
+  }
 }
 
 export function openTrackedWhatsApp(
@@ -81,13 +99,21 @@ export function openTrackedWhatsApp(
   const phoneNumber = "5511961820112";
   const destination = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
-  trackContactAttempt({
-    channel: "whatsapp",
-    ctaLocation,
-    ctaLabel,
-  });
+  let redirected = false;
+  const openWhatsApp = () => {
+    if (redirected) return;
+    redirected = true;
+    window.open(destination, "_blank", "noopener,noreferrer");
+  };
 
-  window.open(destination, "_blank", "noopener,noreferrer");
+  trackContactAttempt(
+    {
+      channel: "whatsapp",
+      ctaLocation,
+      ctaLabel,
+    },
+    openWhatsApp,
+  );
 }
 
 export function openTrackedPhoneCall(ctaLocation: string, ctaLabel: string) {
