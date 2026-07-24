@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Brain, Users, Heart, Clock, Shield, Video, MessageCircle, Target, ArrowRight, Check, Sparkles, Star } from 'lucide-react'
+import { Brain, Users, Clock, Shield, Video, MessageCircle, Target, ArrowRight, Check, Sparkles, Star } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useScrollAnimation, fadeInUpVariants, scaleInVariants, staggerContainer } from '@/hooks/useScrollAnimation'
@@ -19,46 +19,16 @@ export default function Services() {
     {
       id: 'individual',
       icon: Brain,
-      title: 'Terapia Individual',
-      description: 'Atendimento personalizado para sua demanda',
+      title: 'Terapia Comportamental Individual',
+      description: 'Atendimento individual para adultos, presencial e online',
       duration: '50 minutos',
       features: [
-        'Avaliação psicológica completa',
         'Plano terapêutico individualizado',
         'Técnicas baseadas em evidências',
         'Acompanhamento contínuo'
       ],
       popular: false,
       gradient: 'from-blue-500 to-blue-600'
-    },
-    {
-      id: 'casal',
-      icon: Heart,
-      title: 'Terapia de Casal',
-      description: 'Fortalecimento do relacionamento através da comunicação eficaz e resolução de conflitos.',
-      duration: '60 minutos',
-      features: [
-        'Melhora na comunicação',
-        'Resolução de conflitos',
-        'Fortalecimento de vínculos',
-        'Planejamento conjunto'
-      ],
-      popular: true,
-      gradient: 'from-purple-500 to-pink-500'
-    },
-    {
-      id: 'groups',
-      icon: Users,
-      title: 'Atendimento de grupos',
-      description: 'Conduzo grupos focados em pessoas com TEA (transtorno do espectro autista) para promover comunicação, conexão e habilidades sociais.',
-      duration: 'Sessões semanais',
-      features: [
-        'Atendimentos semanais',
-        'Flexibilidade de horários',
-        'Formato presencial e online'
-      ],
-      popular: false,
-      gradient: 'from-green-500 to-teal-500'
     }
   ]
 
@@ -170,7 +140,7 @@ export default function Services() {
         {/* Main Services */}
         <motion.div 
           ref={servicesRef}
-          className="grid lg:grid-cols-3 gap-8 mb-16"
+          className="grid max-w-md mx-auto gap-8 mb-16"
           variants={staggerContainer}
           initial="hidden"
           animate={servicesVisible ? "visible" : "hidden"}

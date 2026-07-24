@@ -45,10 +45,7 @@ export default function Footer() {
   ]
 
   const services = [
-    { name: 'Terapia Individual', href: '#services' },
-    { name: 'Terapia de Casal', href: '#services' },
-    { name: 'Atendimento de grupos', href: '#services' },
-    { name: 'Avaliação Psicológica', href: '#services' }
+    { name: 'Terapia Comportamental Individual', href: '#services' }
   ]
 
   const contactInfo = [
