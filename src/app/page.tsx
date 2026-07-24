@@ -36,10 +36,10 @@ export default function Home() {
     "description": "Psicólogo clínico em Guarulhos, especializado em Terapia Comportamental. 12 anos de experiência em atendimento particular.",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Rua Ramos de Azevedo, 158",
+      "streetAddress": "Rua Dr. Ramos de Azevedo, 159, conjunto 2112",
       "addressLocality": "Guarulhos",
       "addressRegion": "SP",
-      "postalCode": "07013-040",
+      "postalCode": "07020-000",
       "addressCountry": "BR"
     },
     "geo": {
@@ -90,13 +90,6 @@ export default function Home() {
               "https://www.doctoralia.com.br/andre-fiker",
               "https://www.instagram.com/andrefiker.psicologo"
             ],
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "5",
-              "reviewCount": "52",
-              "bestRating": "5",
-              "worstRating": "1"
-            },
             "priceRange": "$$",
             "paymentAccepted": ["PIX", "Transferência", "Débito"],
             "currenciesAccepted": "BRL",
@@ -108,24 +101,8 @@ export default function Home() {
                   "@type": "Offer",
                   "itemOffered": {
                     "@type": "Service",
-                    "name": "Terapia Individual",
-                    "description": "Atendimento psicológico individual para ansiedade, depressão e outros quadros"
-                  }
-                },
-                {
-                  "@type": "Offer", 
-                  "itemOffered": {
-                    "@type": "Service",
-                    "name": "Terapia de Casal",
-                    "description": "Atendimento psicológico para casais"
-                  }
-                },
-                {
-                  "@type": "Offer",
-                  "itemOffered": {
-                    "@type": "Service", 
-                    "name": "Atendimento Online",
-                    "description": "Atendimento psicológico online via plataforma segura"
+                    "name": "Terapia Comportamental Individual",
+                    "description": "Atendimento individual para adultos, presencial e online"
                   }
                 }
               ]
