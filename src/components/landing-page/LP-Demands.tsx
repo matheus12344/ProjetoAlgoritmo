@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Brain, Smile, Users, TrendingUp, HeartHandshake, ShieldCheck, Heart } from "lucide-react";
+import { Brain, Smile, Users, HeartHandshake, ShieldCheck, Heart } from "lucide-react";
 
 const demands = [
   {
@@ -28,11 +28,6 @@ const demands = [
     icon: Users,
     title: "TDAH e TEA em Adultos",
     description: "Acompanhamento especializado para manejo de sintomas e adaptação funcional."
-  },
-  {
-    icon: TrendingUp,
-    title: "Alta Performance",
-    description: "Desenvolvimento de competências emocionais para carreira e vida pessoal."
   },
   {
     icon: ShieldCheck,

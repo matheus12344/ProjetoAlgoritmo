@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     template: '%s | André Fiker'
   },
   description: "André Fiker - Psicólogo Clínico especialista em Terapia Comportamental. Atendimento presencial em Guarulhos e online para todo o Brasil.",
-  keywords: ['psicólogo guarulhos', 'terapia comportamental', 'terapia cognitiva', 'atendimento online', 'psicólogo online', 'terapia de ansiedade', 'terapia de casal', 'TCC'],
+  keywords: ['psicólogo guarulhos', 'terapia comportamental', 'terapia cognitiva', 'atendimento online', 'psicólogo online', 'terapia de ansiedade', 'TCC'],
   authors: [{ name: 'André Fiker' }],
   creator: 'André Fiker',
   publisher: 'André Fiker',

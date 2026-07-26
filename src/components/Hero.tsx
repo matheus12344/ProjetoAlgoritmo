@@ -79,7 +79,6 @@ export function Hero() {
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                 ))}
-                <span className="ml-2 text-slate-600 dark:text-slate-300 font-medium">(+130 avaliações)</span>
               </div>
             </motion.div>
 
@@ -242,22 +241,6 @@ export function Hero() {
                   </div>
                 </motion.div>
 
-                <motion.div
-                  animate={{
-                    rotate: [5, -5, 5],
-                  }}
-                  transition={{
-                    duration: 10,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                  }}
-                  className="absolute -bottom-4 -left-4 bg-white dark:bg-slate-800 rounded-xl p-3 shadow-lg hidden lg:flex"
-                >
-                  <div className="flex items-center space-x-2">
-                    <Heart className="w-5 h-5 text-red-500" />
-                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">+2.000 pacientes</span>
-                  </div>
-                </motion.div>
               </div>
             </motion.div>
           </motion.div>
