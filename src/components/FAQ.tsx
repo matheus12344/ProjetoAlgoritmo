@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, HelpCircle, Clock, Shield, CreditCard, Video, Users, MessageSquare, Calendar } from 'lucide-react'
+import { ChevronDown, HelpCircle, Clock, Shield, CreditCard, Video, MessageSquare, Calendar } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { useScrollAnimation, fadeInUpVariants, scaleInVariants } from '@/hooks/useScrollAnimation'
 
@@ -48,13 +48,6 @@ export default function FAQ() {
       icon: CreditCard,
       category: "Pagamento",
       color: "yellow"
-    },
-    {
-      question: "Como funciona a terapia de casal?",
-      answer: "A terapia de casal envolve sessões conjuntas onde trabalhamos a comunicação, resolução de conflitos e fortalecimento do vínculo. Algumas vezes podem ser recomendadas sessões individuais complementares. O objetivo é desenvolver ferramentas para um relacionamento mais saudável.",
-      icon: Users,
-      category: "Terapia de Casal",
-      color: "pink"
     },
     {
       question: "Preciso de encaminhamento médico?",

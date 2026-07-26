@@ -36,10 +36,10 @@ export default function Home() {
     "description": "Psicólogo clínico em Guarulhos, especializado em Terapia Comportamental. 12 anos de experiência em atendimento particular.",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Rua Dr. Ramos de Azevedo, 159, conjunto 2112",
+      "streetAddress": "Rua Dr. Ramos de Azevedo, 159, sala 2112",
       "addressLocality": "Guarulhos",
       "addressRegion": "SP",
-      "postalCode": "07020-000",
+      "postalCode": "07012-020",
       "addressCountry": "BR"
     },
     "geo": {
@@ -78,13 +78,12 @@ export default function Home() {
             "email": "contato@andrefiker.com.br",
             "address": {
               "@type": "PostalAddress",
-              "streetAddress": "Rua Dr. Ramos de Azevedo, 159, conjunto 2112",
+              "streetAddress": "Rua Dr. Ramos de Azevedo, 159, sala 2112",
               "addressLocality": "Guarulhos",
               "addressRegion": "SP",
               "addressCountry": "BR",
-              "postalCode": "07020-000"
+              "postalCode": "07012-020"
             },
-            "openingHours": "Mo-Fr 09:00-19:00",
             "url": "https://www.andrefiker.com.br",
             "sameAs": [
               "https://www.doctoralia.com.br/andre-fiker",

@@ -118,7 +118,6 @@ export function MobileNavigation({ menuItems }: { menuItems: Array<{ label: stri
                       <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
-                  <p className="text-sm text-gray-300">+130 avaliações 5/5</p>
                   <p className="text-xs text-gray-400">Google e Doctoralia</p>
                 </div>
               </div>

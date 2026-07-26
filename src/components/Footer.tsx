@@ -64,13 +64,13 @@ export default function Footer() {
     {
       icon: MapPin,
       label: 'Endereço',
-      value: 'Rua Dr. Ramos de Azevedo, 159, conjunto 2112, Guarulhos - SP',
+      value: 'Rua Dr. Ramos de Azevedo, 159, sala 2112, Centro, Guarulhos - SP, CEP 07012-020',
       href: '#'
     },
     {
       icon: Clock,
       label: 'Horário',
-      value: 'Segunda a Sexta: 09h às 19h',
+      value: 'Atendimento somente com agendamento.',
       href: '#'
     }
   ]

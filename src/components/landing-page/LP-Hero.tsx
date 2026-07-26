@@ -124,22 +124,6 @@ export function LPHero() {
                 />
               </div>
 
-              <div className="absolute -bottom-6 -left-6 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-xl flex items-center gap-4">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-800 bg-slate-200" />
-                  ))}
-                  <div className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-800 bg-blue-600 flex items-center justify-center text-[10px] text-white font-bold">
-                    +130
-                  </div>
-                </div>
-                <div>
-                  <div className="flex text-yellow-500">
-                    {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-3 h-3 fill-current" />)}
-                  </div>
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">Avaliações Positivas</p>
-                </div>
-              </div>
             </div>
           </motion.div>
         </div>
