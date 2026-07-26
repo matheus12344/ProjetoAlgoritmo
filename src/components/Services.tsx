@@ -72,7 +72,7 @@ export default function Services() {
     {
       icon: Target,
       title: 'Terapia para mudanças e transições de vida',
-      description: 'Apoio psicológico para otimizar performance pessoal e profissional',
+      description: 'Apoio psicológico para lidar com mudanças, transições e desafios da vida pessoal e profissional.',
       color: 'text-green-600',
       bgColor: 'bg-green-100'
     }
