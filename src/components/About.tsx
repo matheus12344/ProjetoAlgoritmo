@@ -35,7 +35,7 @@ export default function About() {
             "Transtornos de Humor e de personalidade",
             "Neuro divergências: TEA (Transtorno do Espectro Autista) / TDA (Transtorno do Déficit de Atenção)",
             "Autoestima e autoconfiança",
-            "Terapia para alta performance"
+            "Terapia para mudanças e transições de vida"
           ]
         }
       ]
