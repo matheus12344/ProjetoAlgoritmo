@@ -1,6 +1,7 @@
 "use client";
 
 import { LPHero } from "@/components/landing-page/LP-Hero";
+import { LPTCC } from "@/components/landing-page/LP-TCC";
 import { LPDemands } from "@/components/landing-page/LP-Demands";
 import { LPDifferences } from "@/components/landing-page/LP-Differences";
 import { LPScheduling } from "@/components/landing-page/LP-Scheduling";
@@ -13,9 +14,9 @@ import { openTrackedPhoneCall, openTrackedWhatsApp } from "@/lib/contact-trackin
 export default function LandingPageClient() {
   const handleFinalWhatsAppClick = () => {
     openTrackedWhatsApp(
-      "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular",
+      "Olá André, vim pelo Google e quero entender se o atendimento faz sentido para a minha situação",
       "lp_final_cta",
-      "Falar com André agora",
+      "Conversar sobre o atendimento",
     );
   };
 
@@ -43,6 +44,7 @@ export default function LandingPageClient() {
       <div id="individual">
         <LPHero />
       </div>
+      <LPTCC />
       <div id="ansiedade">
         <LPDemands />
       </div>
@@ -61,15 +63,15 @@ export default function LandingPageClient() {
       {/* Final CTA Section */}
       <section className="py-24 bg-blue-600 dark:bg-blue-700 text-white text-center">
         <div className="max-w-3xl mx-auto px-4">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">Pronto para dar o primeiro passo?</h2>
-          <p className="text-xl text-blue-50 mb-10 opacity-90">Não deixe para amanhã o cuidado que você merece hoje. Estou aqui para te ouvir e ajudar.</p>
+          <h2 className="text-3xl md:text-5xl font-bold mb-6">Quer verificar se este atendimento combina com o que você procura?</h2>
+          <p className="text-xl text-blue-50 mb-10 opacity-90">Podemos começar com uma conversa breve pelo WhatsApp para você explicar o que busca e tirar dúvidas.</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <button
               onClick={handleFinalWhatsAppClick}
               className="bg-white text-blue-600 hover:bg-slate-50 px-10 py-5 rounded-full text-xl font-bold shadow-xl transition-all hover:scale-105"
               type="button"
             >
-              Falar com André agora
+              Conversar sobre o atendimento
             </button>
           </div>
         </div>
@@ -78,7 +80,7 @@ export default function LandingPageClient() {
       <footer className="py-12 bg-slate-50 dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">
-            © 2024 André Fiker - Psicólogo Clínico | CRP 06/115147
+            © 2026 André Fiker - Psicólogo Clínico | CRP 06/115147
           </p>
           <p className="text-slate-400 text-xs max-w-2xl mx-auto leading-relaxed">
             O agendamento de consultas via este site não constitui emergência médica. Em casos de crise aguda ou risco imediato, procure o pronto-socorro mais próximo ou ligue 188 (CVV).

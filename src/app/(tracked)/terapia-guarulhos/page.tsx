@@ -3,15 +3,15 @@ import Script from "next/script";
 import LandingPageClient from "./LandingPageClient";
 
 export const metadata: Metadata = {
-  title: "Psicólogo em Guarulhos | Atendimento Particular",
-  description: "Busca psicólogo em Guarulhos? André Fiker oferece terapia comportamental para adultos. Atendimento presencial e online. Especialista em ansiedade, depressão e TDAH. Agende sua consulta!",
-  keywords: ["psicólogo guarulhos", "terapia comportamental guarulhos", "psicólogo particular guarulhos", "terapia online", "ansiedade guarulhos", "depressão guarulhos", "TDAH adultos guarulhos"],
+  title: "Psicólogo TCC em Guarulhos | Terapia Particular",
+  description: "Terapia Comportamental, TCC e ACT para adultos em Guarulhos e online. Sessão particular de 50 minutos por R$250 com André Fiker, CRP 06/115147.",
+  keywords: ["psicólogo guarulhos", "psicólogo TCC guarulhos", "terapia cognitivo comportamental guarulhos", "ACT terapia", "psicólogo particular guarulhos", "terapia online", "ansiedade e autocobrança"],
   alternates: {
     canonical: "https://www.andrefiker.com.br/terapia-guarulhos",
   },
   openGraph: {
-    title: "Psicólogo em Guarulhos | André Fiker - Terapia Comportamental",
-    description: "Atendimento psicológico especializado em Guarulhos e Online. Recupere seu equilíbrio emocional com quem tem mais de 12 anos de experiência.",
+    title: "Psicólogo TCC em Guarulhos | André Fiker",
+    description: "Terapia Comportamental, TCC e ACT para adultos. Atendimento particular no Centro de Guarulhos ou online.",
     url: "https://www.andrefiker.com.br/terapia-guarulhos",
     siteName: "André Fiker Psicólogo",
     images: [
@@ -44,7 +44,7 @@ export default function LandingPage() {
     "@type": "PsychologicalService",
     "name": "André Fiker - Psicólogo Clínico",
     "image": "https://www.andrefiker.com.br/images/image1.jpg",
-    "description": "Psicólogo clínico especialista em Terapia Comportamental em Guarulhos.",
+    "description": "Atendimento psicológico particular para adultos com Terapia Comportamental, TCC e ACT em Guarulhos e online.",
     "provider": {
       "@type": "MedicalOrganization",
       "name": "Consultório de Psicologia André Fiker",

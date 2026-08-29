@@ -28,6 +28,8 @@ function getSafeMetadata({
     contact_channel: channel,
     cta_location: ctaLocation,
     cta_label: ctaLabel,
+    landing_path: window.location.pathname,
+    landing_section: window.location.hash.replace(/^#/, "") || "top",
     event_category: "contact",
   };
 }
