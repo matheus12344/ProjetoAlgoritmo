@@ -1,0 +1,167 @@
+import { Metadata } from 'next'
+import Header from '@/components/Header'
+import { Hero } from '@/components/Hero'
+import About from '@/components/About'
+import Services from '@/components/Services'
+import Testimonials from '@/components/Testimonials'
+import BookSection from '@/components/BookSection'
+import FAQ from '@/components/FAQ'
+import BlogPreview from '@/components/BlogPreview'
+import Footer from '@/components/Footer'
+
+export const metadata: Metadata = {
+  title: 'Psicólogo em Guarulhos  André Fiker | Terapia Comportamental | Particular',
+  description: 'André Fiker, psicólogo clínico em Guarulhos. 12 anos em Terapia Comportamental. Especialização ITCR-Campinas, formação PUC-SP, certificação Mindfulness Oxford. Atendimento particular R$250, presencial ou online. Não atendo convênio.',
+  keywords: 'psicólogo guarulhos, terapia comportamental, psicólogo particular, terapia comportamental guarulhos, atendimento particular, ITCR, análise do comportamento, TCC',
+  metadataBase: new URL('https://www.andrefiker.com.br'),
+  alternates: { canonical: '/' },
+  openGraph: {
+    title: 'Psicólogo em Guarulhos  André Fiker | Terapia Comportamental Particular',
+    description: 'Psicólogo clínico, 12 anos em Terapia Comportamental. Atendimento particular em Guarulhos e online. R$250.',
+    url: 'https://www.andrefiker.com.br',
+    siteName: 'André Fiker - Psicólogo',
+    locale: 'pt_BR',
+    type: 'website',
+  },
+}
+
+export default function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "PsychologicalService",
+    "name": "André Fiker - Psicólogo Clínico",
+    "image": "https://www.andrefiker.com.br/images/image1.jpg",
+    "url": "https://www.andrefiker.com.br",
+    "telephone": "+5511961820112",
+    "description": "Psicólogo clínico em Guarulhos, especializado em Terapia Comportamental. 12 anos de experiência em atendimento particular.",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Rua Dr. Ramos de Azevedo, 159, sala 2112",
+      "addressLocality": "Guarulhos",
+      "addressRegion": "SP",
+      "postalCode": "07012-020",
+      "addressCountry": "BR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "-23.4542",
+      "longitude": "-46.5333"
+    },
+    "priceRange": "R$250",
+    "areaServed": {
+      "@type": "City",
+      "name": "Guarulhos"
+    },
+    "knowsAbout": ["Terapia Comportamental", "Análise do Comportamento", "TCC", "Mindfulness"],
+    "founder": {
+      "@type": "Person",
+      "name": "André Fiker",
+      "alumniOf": [
+        {"@type": "CollegeOrUniversity", "name": "PUC-SP"},
+        {"@type": "CollegeOrUniversity", "name": "ITCR-Campinas"},
+        {"@type": "CollegeOrUniversity", "name": "University of Oxford"}
+      ]
+    }
+  };
+
+  return (
+    <main className="min-h-screen bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": ["LocalBusiness", "Person"],
+            "name": "André Fiker - Psicólogo",
+            "image": "https://www.andrefiker.com.br/images/andre-fiker-psicologo.jpg",
+            "telephone": "+55 11 96182-0112",
+            "email": "contato@andrefiker.com.br",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Rua Dr. Ramos de Azevedo, 159, sala 2112",
+              "addressLocality": "Guarulhos",
+              "addressRegion": "SP",
+              "addressCountry": "BR",
+              "postalCode": "07012-020"
+            },
+            "url": "https://www.andrefiker.com.br",
+            "sameAs": [
+              "https://www.doctoralia.com.br/andre-fiker",
+              "https://www.instagram.com/andrefiker.psicologo"
+            ],
+            "priceRange": "$$",
+            "paymentAccepted": ["PIX", "Transferência", "Débito"],
+            "currenciesAccepted": "BRL",
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Serviços Psicológicos",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Terapia Comportamental Individual",
+                    "description": "Atendimento individual para adultos, presencial e online"
+                  }
+                }
+              ]
+            },
+            "knowsAbout": [
+              "Terapia Comportamental",
+              "Terapia Cognitivo-Comportamental",
+              "Análise do Comportamento",
+              "Mindfulness",
+              "Ansiedade",
+              "Depressão",
+              "Relacionamentos"
+            ],
+            "jobTitle": "Psicólogo Clínico",
+            "worksFor": {
+              "@type": "Organization",
+              "name": "Clínica André Fiker"
+            },
+            "alumniOf": [
+              {
+                "@type": "EducationalOrganization",
+                "name": "PUC SP",
+                "sameAs": "https://www.pucsp.br/"
+              },
+              {
+                "@type": "EducationalOrganization", 
+                "name": "ITCR",
+                "sameAs": "https://www.itcr.com.br/"
+              }
+            ],
+            "hasCredential": [
+              {
+                "@type": "EducationalOccupationalCredential",
+                "credentialCategory": "Graduação",
+                "name": "Psicologia",
+                "recognizedBy": {
+                  "@type": "Organization",
+                  "name": "Conselho Regional de Psicologia - CRP 06"
+                }
+              },
+              {
+                "@type": "EducationalOccupationalCredential",
+                "credentialCategory": "Especialização",
+                "name": "Terapia Comportamental"
+              }
+            ]
+          })
+        }}
+      />
+      
+      <Header />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <Hero />
+      <About />
+  <Services />
+  <BookSection />
+  <Testimonials />
+      <FAQ />
+      <BlogPreview />
+      <Footer />
+    </main>
+  )
+}
