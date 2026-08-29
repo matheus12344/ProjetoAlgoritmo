@@ -3,12 +3,16 @@ import { afterEach, test } from "node:test";
 import {
   CONTACT_CONVERSION_SEND_TO,
   GOOGLE_ADS_ID,
+  openTrackedWhatsApp,
   trackContactAttempt,
 } from "./contact-tracking";
 
 const originalWindow = globalThis.window;
+const originalFetch = globalThis.fetch;
 
 afterEach(() => {
+  globalThis.fetch = originalFetch;
+
   if (originalWindow) {
     Object.defineProperty(globalThis, "window", {
       configurable: true,
@@ -104,4 +108,48 @@ test("trackContactAttempt still completes when Google scripts are unavailable", 
   );
 
   assert.equal(completed, true);
+});
+
+test("WhatsApp receives the opaque reference but never the click ID", async () => {
+  const opened: string[] = [];
+  const storage = new Map<string, string>();
+  const reference = "AF-7K9M-4Q2X";
+  const expiresAt = new Date(
+    Date.now() + 90 * 24 * 60 * 60 * 1000,
+  ).toISOString();
+
+  globalThis.fetch = async () =>
+    Response.json({ ok: true, reference, expiresAt });
+
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      dataLayer: [],
+      location: {
+        hash: "",
+        pathname: "/terapia-guarulhos",
+        search: "?gclid=EAIaIQobChMIPrivateClick123",
+      },
+      open: (url: string) => opened.push(url),
+      sessionStorage: {
+        getItem: (key: string) => storage.get(key) ?? null,
+        removeItem: (key: string) => storage.delete(key),
+        setItem: (key: string, value: string) => storage.set(key, value),
+      },
+    },
+    writable: true,
+  });
+
+  openTrackedWhatsApp(
+    "Olá André, gostaria de conversar",
+    "lp_hero",
+    "Agendar via WhatsApp",
+  );
+
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
+  assert.equal(opened.length, 1);
+  assert.match(opened[0], /AF-7K9M-4Q2X/);
+  assert.doesNotMatch(opened[0], /EAIaIQobChMIPrivateClick123/);
 });

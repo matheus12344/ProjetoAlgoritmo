@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { LPHero } from "@/components/landing-page/LP-Hero";
 import { LPTCC } from "@/components/landing-page/LP-TCC";
 import { LPDemands } from "@/components/landing-page/LP-Demands";
@@ -9,9 +11,17 @@ import { LPFAQ } from "@/components/landing-page/LP-FAQ";
 import { DoctoraliaWidget } from "@/components/landing-page/DoctoraliaWidget";
 import { WhatsAppSticky } from "@/components/landing-page/WhatsAppSticky";
 import Testimonials from "@/components/Testimonials";
-import { openTrackedPhoneCall, openTrackedWhatsApp } from "@/lib/contact-tracking";
+import {
+  captureAdClickReference,
+  openTrackedPhoneCall,
+  openTrackedWhatsApp,
+} from "@/lib/contact-tracking";
 
 export default function LandingPageClient() {
+  useEffect(() => {
+    void captureAdClickReference();
+  }, []);
+
   const handleFinalWhatsAppClick = () => {
     openTrackedWhatsApp(
       "Olá André, vim pelo Google e quero entender se o atendimento faz sentido para a minha situação",
