@@ -38,21 +38,32 @@ export const metadata: Metadata = {
 };
 
 export default function LandingPage() {
+  const address = {
+    "@type": "PostalAddress",
+    "streetAddress": "Rua Doutor Ramos de Azevedo, 159, sala 2112",
+    "addressLocality": "Guarulhos",
+    "addressRegion": "SP",
+    "postalCode": "07012-020",
+    "addressCountry": "BR"
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "PsychologicalService",
     "name": "André Fiker - Psicólogo Clínico",
     "image": "https://www.andrefiker.com.br/images/image1.jpg",
     "description": "Psicoterapia particular para adultos com Terapia Comportamental e TCC em Guarulhos e online.",
+    "telephone": "+55 11 96182-0112",
+    "address": address,
     "provider": {
-      "@type": "MedicalOrganization",
-      "name": "Consultório de Psicologia André Fiker",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Guarulhos",
-        "addressRegion": "SP",
-        "addressCountry": "BR"
-      },
+      "@type": "Person",
+      "name": "André Fiker",
+      "identifier": "CRP 06/115147"
+    },
+    "location": {
+      "@type": "Place",
+      "name": "Clínica Equalize",
+      "address": address,
       "geo": {
         "@type": "GeoCoordinates",
         "latitude": "-23.4542",

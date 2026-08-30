@@ -121,6 +121,9 @@ export default function LandingPageClient() {
           <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">
             © 2026 André Fiker - Psicólogo Clínico | CRP 06/115147
           </p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">
+            Atendimento presencial na Clínica Equalize · Rua Doutor Ramos de Azevedo, 159, sala 2112 · Centro · Guarulhos - SP · CEP 07012-020 · (11) 96182-0112
+          </p>
           <div className="mb-4 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
             <Link className="text-blue-700 underline-offset-4 hover:underline dark:text-blue-300" href="/privacidade">
               Política de Privacidade
