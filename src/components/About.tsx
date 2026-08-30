@@ -20,7 +20,6 @@ export default function About() {
         "Especialização em Terapia Comportamental - ITCR",
         "Treinamento em terapia baseada em mindfulness - OXFORD Mindfulness Center",
         "Capacitação em terapia cognitivo-comportamental",
-        "Capacitação em ACP (terapia de aceitação e compromisso)",
         "Formação em terapia baseada em processos - Diade lab"
       ]
     },
@@ -30,12 +29,12 @@ export default function About() {
       items: [
         "+12 anos de experiência clínica",
         {
-          label: "Especialidades:",
+          label: "Áreas atendidas:",
           subitems: [
-            "Transtornos de Humor e de personalidade",
-            "Neuro divergências: TEA (Transtorno do Espectro Autista) / TDA (Transtorno do Déficit de Atenção)",
-            "Autoestima e autoconfiança",
-            "Terapia para mudanças e transições de vida"
+            "Ansiedade, estresse e sobrecarga",
+            "Relacionamentos e limites",
+            "Autocobrança e autoestima",
+            "Mudanças e transições de vida"
           ]
         }
       ]

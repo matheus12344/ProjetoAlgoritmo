@@ -1,13 +1,15 @@
 import { promises as fs } from 'fs'
 import path from 'path'
 import { prisma } from '@/lib/prisma'
+import { isExplicitlyUnpublishedBlogPost } from '@/lib/public-blog'
 
 export async function GET() {
   try {
     const postsPath = path.join(process.cwd(), 'db', 'posts.json')
     if (process.env.DATABASE_URL) {
       const posts = await prisma.post.findMany({ include: { comments: true }, orderBy: { createdAt: 'desc' } })
-      const json = JSON.stringify(posts, null, 2)
+      const visiblePosts = posts.filter((post) => !isExplicitlyUnpublishedBlogPost(post))
+      const json = JSON.stringify(visiblePosts, null, 2)
       return new Response(json, {
         status: 200,
         headers: {
@@ -19,7 +21,13 @@ export async function GET() {
 
     let data: string
     try {
-      data = await fs.readFile(postsPath, 'utf8')
+      const raw = await fs.readFile(postsPath, 'utf8')
+      const posts = raw ? JSON.parse(raw) : []
+      data = JSON.stringify(
+        posts.filter((post: any) => !isExplicitlyUnpublishedBlogPost(post)),
+        null,
+        2,
+      )
     } catch (err: any) {
       if (err?.code === 'ENOENT') {
         data = '[]'

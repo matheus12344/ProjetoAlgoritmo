@@ -3,7 +3,6 @@ import Header from '@/components/Header'
 import { Hero } from '@/components/Hero'
 import About from '@/components/About'
 import Services from '@/components/Services'
-import Testimonials from '@/components/Testimonials'
 import BookSection from '@/components/BookSection'
 import FAQ from '@/components/FAQ'
 import BlogPreview from '@/components/BlogPreview'
@@ -33,7 +32,7 @@ export default function Home() {
     "image": "https://www.andrefiker.com.br/images/image1.jpg",
     "url": "https://www.andrefiker.com.br",
     "telephone": "+5511961820112",
-    "description": "Psicólogo clínico em Guarulhos, especializado em Terapia Comportamental. 12 anos de experiência em atendimento particular.",
+    "description": "Psicólogo clínico em Guarulhos, com formação em Terapia Comportamental e 12 anos de prática clínica em atendimento particular.",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Rua Dr. Ramos de Azevedo, 159, sala 2112",
@@ -158,7 +157,6 @@ export default function Home() {
       <About />
   <Services />
   <BookSection />
-  <Testimonials />
       <FAQ />
       <BlogPreview />
       <Footer />

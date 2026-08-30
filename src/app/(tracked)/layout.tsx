@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Sora } from "next/font/google";
 import "../globals.css";
+import { ConsentManager } from "@/components/ConsentManager";
 import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     default: 'André Fiker - Psicólogo Clínico | Terapia Comportamental',
     template: '%s | André Fiker'
   },
-  description: "André Fiker - Psicólogo Clínico especialista em Terapia Comportamental. Atendimento presencial em Guarulhos e online para todo o Brasil.",
+  description: "André Fiker, psicólogo clínico. Terapia Comportamental e TCC para adultos, com atendimento presencial em Guarulhos e online.",
   keywords: ['psicólogo guarulhos', 'terapia comportamental', 'terapia cognitiva', 'atendimento online', 'psicólogo online', 'terapia de ansiedade', 'TCC'],
   authors: [{ name: 'André Fiker' }],
   creator: 'André Fiker',
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
   openGraph: {
     title: 'André Fiker - Psicólogo Clínico',
-    description: 'Especialista em Terapia Comportamental. Atendimento presencial em Guarulhos e online.',
+    description: 'Terapia Comportamental e TCC para adultos. Atendimento presencial em Guarulhos e online.',
     url: 'https://www.andrefiker.com.br',
     siteName: 'André Fiker - Psicólogo',
     locale: 'pt_BR',
@@ -60,7 +61,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'André Fiker - Psicólogo Clínico',
-    description: 'Especialista em Terapia Comportamental. Atendimento presencial em Guarulhos e online.',
+    description: 'Terapia Comportamental e TCC para adultos. Atendimento presencial em Guarulhos e online.',
     images: ['/images/og-image.jpg'],
   },
 }
@@ -80,28 +81,14 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
-        {/* Google tag (gtag.js) - GA4 + Google Ads */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-8PBSESWNLH"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-8PBSESWNLH');
-              gtag('config', 'AW-10966063764');
-            `,
-          }}
-        />
       </head>
       <body
         className={`${inter.variable} ${sora.variable} antialiased bg-background text-foreground font-sans`}
       >
         {children}
+        <ConsentManager />
         <Toaster />
       </body>
     </html>

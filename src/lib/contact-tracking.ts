@@ -6,10 +6,14 @@ import {
   findAdClickIdentifier,
   isValidAdReference,
 } from "./ad-click-reference";
+import {
+  hasAdvertisingConsent,
+  hasAnalyticsConsent,
+} from "./consent";
 
 declare global {
   interface Window {
-    dataLayer?: Array<Record<string, unknown>>;
+    dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
   }
 }
@@ -19,11 +23,17 @@ export const CONTACT_CONVERSION_SEND_TO =
   "AW-10966063764/eYEhCK_w8uYaEJS1g-0o";
 
 type ContactChannel = "whatsapp" | "phone";
+export type ContactPlacement =
+  | "hero"
+  | "approach"
+  | "scheduling"
+  | "final"
+  | "sticky"
+  | "nav";
 
 type ContactClickOptions = {
   channel: ContactChannel;
-  ctaLocation: string;
-  ctaLabel: string;
+  placement: ContactPlacement;
 };
 
 type StoredAdReference = {
@@ -36,9 +46,10 @@ let activeCapture: {
   promise: Promise<string | null>;
 } | null = null;
 let currentAdReference: string | null = null;
+let captureGeneration = 0;
 
 function readStoredAdReference(): string | null {
-  if (typeof window === "undefined") {
+  if (typeof window === "undefined" || !hasAdvertisingConsent()) {
     return null;
   }
 
@@ -71,7 +82,7 @@ function readStoredAdReference(): string | null {
 }
 
 export function captureAdClickReference(): Promise<string | null> {
-  if (typeof window === "undefined") {
+  if (typeof window === "undefined" || !hasAdvertisingConsent()) {
     return Promise.resolve(null);
   }
 
@@ -88,6 +99,7 @@ export function captureAdClickReference(): Promise<string | null> {
   }
 
   currentAdReference = null;
+  const generation = captureGeneration;
   try {
     window.sessionStorage.removeItem(AD_REFERENCE_STORAGE_KEY);
   } catch {
@@ -102,7 +114,11 @@ export function captureAdClickReference(): Promise<string | null> {
     credentials: "same-origin",
   })
     .then(async (response) => {
-      if (!response.ok) {
+      if (
+        !response.ok ||
+        generation !== captureGeneration ||
+        !hasAdvertisingConsent()
+      ) {
         return null;
       }
 
@@ -113,6 +129,10 @@ export function captureAdClickReference(): Promise<string | null> {
         typeof result.expiresAt !== "string" ||
         Date.parse(result.expiresAt) <= Date.now()
       ) {
+        return null;
+      }
+
+      if (generation !== captureGeneration || !hasAdvertisingConsent()) {
         return null;
       }
 
@@ -142,17 +162,28 @@ export function captureAdClickReference(): Promise<string | null> {
   return promise;
 }
 
+export function clearAdClickReference() {
+  captureGeneration += 1;
+  activeCapture = null;
+  currentAdReference = null;
+
+  if (typeof window !== "undefined") {
+    try {
+      window.sessionStorage.removeItem(AD_REFERENCE_STORAGE_KEY);
+    } catch {
+      // Storage may be unavailable; the in-memory reference was still cleared.
+    }
+  }
+}
+
 function getSafeMetadata({
   channel,
-  ctaLocation,
-  ctaLabel,
+  placement,
 }: ContactClickOptions) {
   return {
     contact_channel: channel,
-    cta_location: ctaLocation,
-    cta_label: ctaLabel,
+    cta_placement: placement,
     landing_path: window.location.pathname,
-    landing_section: window.location.hash.replace(/^#/, "") || "top",
     event_category: "contact",
   };
 }
@@ -170,18 +201,35 @@ export function trackContactAttempt(
     return;
   }
 
-  if (typeof window.gtag !== "function") {
+  const analyticsAllowed = hasAnalyticsConsent();
+  const advertisingAllowed = hasAdvertisingConsent();
+
+  if (
+    (!analyticsAllowed && !advertisingAllowed) ||
+    typeof window.gtag !== "function"
+  ) {
     onTracked?.();
     return;
   }
 
   const metadata = getSafeMetadata(options);
 
-  pushDataLayerEvent("lead_click", {
-    lead_channel: options.channel,
-    send_to: GOOGLE_ADS_ID,
-    ...metadata,
-  });
+  if (analyticsAllowed) {
+    pushDataLayerEvent("lead_click", {
+      lead_channel: options.channel,
+      ...metadata,
+    });
+
+    window.gtag(
+      "event",
+      options.channel === "whatsapp" ? "whatsapp_click" : "phone_click",
+      {
+        send_to: "G-8PBSESWNLH",
+        transport_type: "beacon",
+        ...metadata,
+      },
+    );
+  }
 
   let fired = false;
   const complete = () => {
@@ -190,32 +238,25 @@ export function trackContactAttempt(
     onTracked?.();
   };
 
-  window.gtag("event", "conversion", {
-    send_to: CONTACT_CONVERSION_SEND_TO,
-    transport_type: "beacon",
-    ...metadata,
-    ...(onTracked ? { event_callback: complete } : {}),
-  });
-
-  window.gtag(
-    "event",
-    options.channel === "whatsapp" ? "whatsapp_click" : "phone_click",
-    {
-      send_to: GOOGLE_ADS_ID,
+  if (advertisingAllowed) {
+    window.gtag("event", "conversion", {
+      send_to: CONTACT_CONVERSION_SEND_TO,
       transport_type: "beacon",
       ...metadata,
-    },
-  );
+      ...(onTracked ? { event_callback: complete } : {}),
+    });
+  } else {
+    complete();
+  }
 
-  if (onTracked) {
+  if (onTracked && advertisingAllowed) {
     setTimeout(complete, 400);
   }
 }
 
 export function openTrackedWhatsApp(
   message: string,
-  ctaLocation: string,
-  ctaLabel: string,
+  placement: ContactPlacement,
 ) {
   if (typeof window === "undefined") {
     return;
@@ -244,22 +285,20 @@ export function openTrackedWhatsApp(
   trackContactAttempt(
     {
       channel: "whatsapp",
-      ctaLocation,
-      ctaLabel,
+      placement,
     },
     openWhatsApp,
   );
 }
 
-export function openTrackedPhoneCall(ctaLocation: string, ctaLabel: string) {
+export function openTrackedPhoneCall(placement: ContactPlacement) {
   if (typeof window === "undefined") {
     return;
   }
 
   trackContactAttempt({
     channel: "phone",
-    ctaLocation,
-    ctaLabel,
+    placement,
   });
 
   window.location.href = "tel:+5511961820112";

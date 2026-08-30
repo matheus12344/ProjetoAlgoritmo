@@ -13,9 +13,8 @@ const processSteps = [
 export function LPTCC() {
   const handleWhatsAppClick = () => {
     openTrackedWhatsApp(
-      "Olá André, vim pelo Google e quero entender se o atendimento com TCC e ACT faz sentido para a minha situação",
-      "lp_tcc",
-      "Conversar sobre TCC e ACT",
+      "Olá André, vim pelo Google e quero entender como funciona o atendimento com Terapia Comportamental e TCC",
+      "approach",
     );
   };
 
@@ -35,19 +34,19 @@ export function LPTCC() {
           transition={{ duration: 0.55 }}
         >
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-blue-300">
-            TCC e ACT para adultos
+            Terapia Comportamental e TCC para adultos
           </p>
           <h2
             id="tcc-title"
             className="max-w-3xl text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl"
           >
-            Um processo estruturado para ansiedade, autocobrança e perfeccionismo
+            Um processo colaborativo para compreender padrões e definir objetivos
           </h2>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-300">
-            Pensamentos acelerados, medo de errar, adiamento e a sensação de nunca
-            fazer o suficiente podem formar um ciclo. A TCC e a ACT ajudam a
-            compreender esse padrão e a construir respostas mais flexíveis, sem
-            promessas rápidas e respeitando o ritmo de cada pessoa.
+            A Terapia Comportamental e a TCC ajudam a observar relações entre
+            situações, pensamentos, emoções e ações. O processo é construído em
+            conjunto, com objetivos revisados ao longo das sessões e sem promessas
+            de resultado.
           </p>
 
           <ol className="mt-8 space-y-4">
@@ -73,7 +72,7 @@ export function LPTCC() {
           <div className="mt-6 space-y-5">
             <div className="flex items-center gap-3">
               <Clock3 className="h-5 w-5 text-blue-400" />
-              <p className="text-lg font-semibold">R$250 por sessão de 50 minutos</p>
+              <p className="text-lg font-semibold">Sessões individuais de 50 minutos</p>
             </div>
             <div className="flex items-center gap-3">
               <MapPin className="h-5 w-5 text-blue-400" />
@@ -92,7 +91,7 @@ export function LPTCC() {
             className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:w-auto"
           >
             <MessageCircle className="h-5 w-5" />
-            Conversar sobre TCC e ACT
+            Conversar pelo WhatsApp
           </button>
         </motion.div>
       </div>

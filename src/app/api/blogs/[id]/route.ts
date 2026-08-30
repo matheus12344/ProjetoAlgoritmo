@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import path from "path";
 import { BlogPost } from "@/types/blog";
 import { prisma } from '@/lib/prisma'
+import { isExplicitlyUnpublishedBlogPost } from '@/lib/public-blog'
 
 const postsPath = path.join(process.cwd(), "db", "posts.json");
 
@@ -15,14 +16,16 @@ export async function GET(
     const resolvedParams = (await (params as any)) as { id: string };
     if (process.env.DATABASE_URL) {
       const post = await prisma.post.findUnique({ where: { id: resolvedParams.id }, include: { comments: true } });
-      if (!post) return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      if (!post || isExplicitlyUnpublishedBlogPost(post)) {
+        return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      }
       return NextResponse.json(post as any);
     }
 
     const raw = await fs.readFile(postsPath, "utf8");
     const posts: BlogPost[] = JSON.parse(raw);
     const post = posts.find((p) => p.id === resolvedParams.id);
-    if (!post) {
+    if (!post || isExplicitlyUnpublishedBlogPost(post)) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 

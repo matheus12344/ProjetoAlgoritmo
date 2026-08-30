@@ -4,20 +4,27 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, Phone, MessageCircle, Heart, ShieldCheck } from "lucide-react";
+import {
+  BadgeCheck,
+  CalendarDays,
+  GraduationCap,
+  MapPin,
+  MessageCircle,
+  Phone,
+  UserRound,
+} from "lucide-react";
 import { openTrackedPhoneCall, openTrackedWhatsApp } from "@/lib/contact-tracking";
 
 export function LPHero() {
   const handleWhatsAppClick = () => {
     openTrackedWhatsApp(
-      "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular",
-      "lp_hero",
-      "Agendar via WhatsApp",
+      "Olá André, vim pelo Google e tenho interesse em conversar sobre psicoterapia particular",
+      "hero",
     );
   };
 
   const handleCallClick = () => {
-    openTrackedPhoneCall("lp_hero", "Ligar Agora");
+    openTrackedPhoneCall("hero");
   };
 
   return (
@@ -37,17 +44,18 @@ export function LPHero() {
             className="text-center lg:text-left"
           >
             <Badge variant="outline" className="mb-3 border-blue-200 bg-blue-50/50 px-3 py-1 text-xs text-blue-700 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-300 sm:mb-4 sm:px-4 sm:py-1.5 sm:text-sm">
-              <Star className="w-3.5 h-3.5 mr-2 fill-current" />
+              <MapPin className="mr-2 h-3.5 w-3.5" />
               Atendimento em Guarulhos e Online
             </Badge>
 
             <h1 className="mb-4 max-w-[11ch] text-3xl font-bold tracking-tight leading-[1.05] text-slate-900 dark:text-white sm:mb-5 sm:max-w-none sm:text-4xl md:text-5xl lg:text-6xl">
-              Terapia Comportamental em Guarulhos
-              <span className="block text-blue-600">Psicólogo Particular</span>
+              Terapia Comportamental e TCC
+              <span className="block text-blue-600">para Adultos em Guarulhos</span>
             </h1>
 
             <p className="mx-auto mb-4 max-w-2xl text-base text-slate-600 dark:text-slate-400 sm:mb-5 sm:text-lg md:text-xl lg:mx-0">
-              Terapia Comportamental com base em evidências científicas. R$250 por sessão de 50 min. Psicólogo formado pela PUC-SP, especialização pelo ITCR-Campinas, 12 anos de prática clínica. Atendimento particular no Centro de Guarulhos ou online.
+              Atendimento particular no Centro de Guarulhos ou online, com
+              sessões individuais de 50 minutos.
             </p>
 
             <div className="mb-4 flex flex-col items-stretch justify-center gap-3 sm:mb-5 sm:flex-row sm:items-center lg:justify-start">
@@ -57,7 +65,7 @@ export function LPHero() {
                 className="w-full rounded-full bg-green-600 px-6 py-4 text-base font-semibold text-white shadow-lg shadow-green-200/50 transition-all hover:scale-105 hover:bg-green-700 sm:w-auto sm:px-8 sm:py-6 sm:text-lg"
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
-                Agendar via WhatsApp
+                Conversar pelo WhatsApp
               </Button>
               <Button
                 onClick={handleCallClick}
@@ -71,35 +79,44 @@ export function LPHero() {
             </div>
 
             <p className="mx-auto mb-5 max-w-2xl text-sm leading-relaxed text-slate-600 dark:text-slate-400 sm:text-base lg:mx-0">
-              Sessões particulares com escuta acolhedora, clareza no processo terapêutico e possibilidade de tirar dúvidas pelo WhatsApp antes de agendar.
+              Psicoterapia para adultos com Terapia Comportamental e TCC.
             </p>
 
-            <div className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-5 dark:border-slate-800 sm:grid-cols-3 sm:gap-6 sm:pt-8">
+            <div className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-5 dark:border-slate-800 sm:grid-cols-4 sm:gap-5 sm:pt-8">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
-                  <Heart className="w-5 h-5" />
+                  <UserRound className="w-5 h-5" />
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white">Acolhimento</p>
-                  <p className="text-xs text-slate-500">Ético e Humano</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">André Fiker</p>
+                  <p className="text-xs text-slate-500">Psicólogo</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
-                  <ShieldCheck className="w-5 h-5" />
+                  <BadgeCheck className="w-5 h-5" />
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white">+12 Anos</p>
-                  <p className="text-xs text-slate-500">Experiência Clínica</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 col-span-2 sm:col-span-1">
-                <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
-                  <Star className="w-5 h-5 fill-current" />
-                </div>
-                <div className="text-left">
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white">CRP Ativo</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">CRP</p>
                   <p className="text-xs text-slate-500">06/115147</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
+                  <GraduationCap className="w-5 h-5" />
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">Formação</p>
+                  <p className="text-xs text-slate-500">PUC-SP e ITCR</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
+                  <CalendarDays className="w-5 h-5" />
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">12 anos</p>
+                  <p className="text-xs text-slate-500">Prática clínica</p>
                 </div>
               </div>
             </div>
@@ -116,7 +133,7 @@ export function LPHero() {
               <div className="relative h-full w-full bg-slate-200 dark:bg-slate-800 rounded-[2rem] overflow-hidden shadow-2xl">
                 <Image
                   src="/images/image1.jpg"
-                  alt="André Fiker - Psicólogo em Guarulhos especialista em Terapia Comportamental"
+                  alt="André Fiker, psicólogo em Guarulhos"
                   fill
                   sizes="448px"
                   className="h-full w-full object-cover grayscale-[20%] transition-all duration-500 hover:grayscale-0"

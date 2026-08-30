@@ -2,6 +2,7 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import BlogPageContent from '@/components/BlogPageContent'
 import { prisma } from '@/lib/prisma'
+import { isPublicBlogPost } from '@/lib/public-blog'
 
 async function getPosts() {
   // If DATABASE_URL is set, read directly from Prisma
@@ -30,7 +31,7 @@ async function getPosts() {
       publishAt: p.publishAt ? (p.publishAt instanceof Date ? p.publishAt.toISOString() : p.publishAt) : undefined,
       likes: p.likes ?? 0,
       comments: p.comments || []
-    }))
+    })).filter((post) => isPublicBlogPost(post, now))
   }
 
   const postsPath = path.join(process.cwd(), 'db', 'posts.json')
@@ -38,12 +39,7 @@ async function getPosts() {
   const posts = JSON.parse(data)
   // only return posts that are published (publishAt not in the future)
   const now = Date.now()
-  const visible = posts.filter((p: any) => {
-    if (!p.publishAt) return true
-    const t = Date.parse(p.publishAt)
-    if (isNaN(t)) return true
-    return t <= now
-  })
+  const visible = posts.filter((post: any) => isPublicBlogPost(post, now))
   return visible
 }
 

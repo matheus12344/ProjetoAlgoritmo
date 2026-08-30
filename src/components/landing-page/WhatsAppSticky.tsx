@@ -33,8 +33,7 @@ export function WhatsAppSticky() {
   const handleWhatsAppClick = () => {
     openTrackedWhatsApp(
       "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular",
-      "lp_sticky_button",
-      "Agendar pelo WhatsApp",
+      "sticky",
     );
   };
 
@@ -59,7 +58,7 @@ export function WhatsAppSticky() {
         <span className="text-xs font-medium uppercase tracking-[0.2em] text-green-100">
           WhatsApp
         </span>
-        <span className="text-sm font-semibold">Agende sua consulta</span>
+        <span className="text-sm font-semibold">Conversar sobre atendimento</span>
       </span>
       <span className="absolute -top-1 -right-1 flex h-4 w-4">
         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>

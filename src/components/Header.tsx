@@ -36,7 +36,6 @@ export default function Header() {
     { name: 'Início', href: '#home' },
     { name: 'Sobre', href: '#about' },
     { name: 'Serviços', href: '#services' },
-    { name: 'Depoimentos', href: '#testimonials' },
     { name: 'FAQ', href: '#faq' },
     { name: 'Blog', href: '/blog' },
     { name: 'Contato', href: '#contact' }

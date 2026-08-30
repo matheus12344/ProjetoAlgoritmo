@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 import { prisma } from "@/lib/prisma";
+import {
+  isExplicitlyUnpublishedBlogPost,
+  isPublicBlogPost,
+} from "@/lib/public-blog";
 
 const postsPath = path.join(process.cwd(), "db", "posts.json");
 
@@ -30,7 +34,9 @@ export async function GET(req: Request) {
         const all = url.searchParams.get("all") === "true";
         if (all) {
           const posts = await prisma.post.findMany({ include: { comments: true }, orderBy: { createdAt: 'desc' } });
-          return NextResponse.json(posts);
+          return NextResponse.json(
+            posts.filter((post) => !isExplicitlyUnpublishedBlogPost(post)),
+          );
         }
 
         const now = new Date();
@@ -44,7 +50,7 @@ export async function GET(req: Request) {
           include: { comments: true },
           orderBy: { createdAt: 'desc' }
         });
-        return NextResponse.json(posts);
+        return NextResponse.json(posts.filter((post) => isPublicBlogPost(post, now)));
       } catch (err) {
         // fall back to file system below if something goes wrong with DB access
         console.error('Prisma GET error', err);
@@ -58,19 +64,18 @@ export async function GET(req: Request) {
     try {
       const url = new URL(req.url);
       const all = url.searchParams.get("all") === "true";
-      if (all) return NextResponse.json(posts);
+      if (all) {
+        return NextResponse.json(
+          posts.filter((post: any) => !isExplicitlyUnpublishedBlogPost(post)),
+        );
+      }
     } catch (err) {
       // ignore URL parsing errors and fall through to default behavior
     }
 
     // Default: only return posts whose publishAt is not in the future
     const now = Date.now();
-    const visible = posts.filter((p: any) => {
-      if (!p.publishAt) return true; // immediate publish
-      const t = Date.parse(p.publishAt);
-      if (isNaN(t)) return true; // malformed publishAt -> show
-      return t <= now;
-    });
+    const visible = posts.filter((post: any) => isPublicBlogPost(post, now));
 
     return NextResponse.json(visible);
   } catch (err) {

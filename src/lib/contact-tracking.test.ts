@@ -2,15 +2,39 @@ import assert from "node:assert/strict";
 import { afterEach, test } from "node:test";
 import {
   CONTACT_CONVERSION_SEND_TO,
-  GOOGLE_ADS_ID,
+  captureAdClickReference,
+  clearAdClickReference,
   openTrackedWhatsApp,
   trackContactAttempt,
 } from "./contact-tracking";
+import { CONSENT_STORAGE_KEY } from "./consent";
 
 const originalWindow = globalThis.window;
 const originalFetch = globalThis.fetch;
 
+function consentValue(analytics: boolean, advertising: boolean) {
+  return JSON.stringify({
+    version: 1,
+    analytics,
+    advertising,
+    decidedAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+  });
+}
+
+function localStorageWithConsent(analytics: boolean, advertising: boolean) {
+  return {
+    getItem: (key: string) =>
+      key === CONSENT_STORAGE_KEY
+        ? consentValue(analytics, advertising)
+        : null,
+    removeItem: () => undefined,
+    setItem: () => undefined,
+  };
+}
+
 afterEach(() => {
+  clearAdClickReference();
   globalThis.fetch = originalFetch;
 
   if (originalWindow) {
@@ -25,7 +49,7 @@ afterEach(() => {
   Reflect.deleteProperty(globalThis, "window");
 });
 
-test("trackContactAttempt distinguishes TCC leads without clinical data", () => {
+test("trackContactAttempt uses a neutral placement and excludes URL fragments", () => {
   const commands: unknown[][] = [];
   const dataLayer: Array<Record<string, unknown>> = [];
 
@@ -34,9 +58,10 @@ test("trackContactAttempt distinguishes TCC leads without clinical data", () => 
     value: {
       dataLayer,
       location: {
-        hash: "#tcc",
+        hash: "#ansiedade",
         pathname: "/terapia-guarulhos",
       },
+      localStorage: localStorageWithConsent(true, true),
       gtag: (...args: unknown[]) => commands.push(args),
     },
     writable: true,
@@ -44,41 +69,47 @@ test("trackContactAttempt distinguishes TCC leads without clinical data", () => 
 
   trackContactAttempt({
     channel: "whatsapp",
-    ctaLabel: "Conversar sobre TCC e ACT",
-    ctaLocation: "lp_tcc",
+    placement: "approach",
   });
 
   assert.deepEqual(dataLayer, [
     {
       contact_channel: "whatsapp",
-      cta_label: "Conversar sobre TCC e ACT",
-      cta_location: "lp_tcc",
+      cta_placement: "approach",
       event: "lead_click",
       event_category: "contact",
       landing_path: "/terapia-guarulhos",
-      landing_section: "tcc",
       lead_channel: "whatsapp",
-      send_to: GOOGLE_ADS_ID,
     },
   ]);
 
   assert.equal(commands.length, 2);
   assert.deepEqual(commands[0], [
     "event",
+    "whatsapp_click",
+    {
+      contact_channel: "whatsapp",
+      cta_placement: "approach",
+      event_category: "contact",
+      landing_path: "/terapia-guarulhos",
+      send_to: "G-8PBSESWNLH",
+      transport_type: "beacon",
+    },
+  ]);
+  assert.deepEqual(commands[1], [
+    "event",
     "conversion",
     {
       contact_channel: "whatsapp",
-      cta_label: "Conversar sobre TCC e ACT",
-      cta_location: "lp_tcc",
+      cta_placement: "approach",
       event_category: "contact",
       landing_path: "/terapia-guarulhos",
-      landing_section: "tcc",
       send_to: CONTACT_CONVERSION_SEND_TO,
       transport_type: "beacon",
     },
   ]);
-  assert.equal(commands[1][0], "event");
-  assert.equal(commands[1][1], "whatsapp_click");
+
+  assert.doesNotMatch(JSON.stringify({ commands, dataLayer }), /ansiedade|landing_section/);
 });
 
 test("trackContactAttempt still completes when Google scripts are unavailable", () => {
@@ -92,6 +123,7 @@ test("trackContactAttempt still completes when Google scripts are unavailable", 
         hash: "",
         pathname: "/terapia-guarulhos",
       },
+      localStorage: localStorageWithConsent(true, true),
     },
     writable: true,
   });
@@ -99,8 +131,7 @@ test("trackContactAttempt still completes when Google scripts are unavailable", 
   trackContactAttempt(
     {
       channel: "whatsapp",
-      ctaLabel: "Agendar via WhatsApp",
-      ctaLocation: "lp_hero",
+      placement: "hero",
     },
     () => {
       completed = true;
@@ -130,6 +161,7 @@ test("WhatsApp receives the opaque reference but never the click ID", async () =
         pathname: "/terapia-guarulhos",
         search: "?gclid=EAIaIQobChMIPrivateClick123",
       },
+      localStorage: localStorageWithConsent(false, true),
       open: (url: string) => opened.push(url),
       sessionStorage: {
         getItem: (key: string) => storage.get(key) ?? null,
@@ -142,8 +174,7 @@ test("WhatsApp receives the opaque reference but never the click ID", async () =
 
   openTrackedWhatsApp(
     "Olá André, gostaria de conversar",
-    "lp_hero",
-    "Agendar via WhatsApp",
+    "hero",
   );
 
   await new Promise((resolve) => setTimeout(resolve, 0));
@@ -152,4 +183,87 @@ test("WhatsApp receives the opaque reference but never the click ID", async () =
   assert.equal(opened.length, 1);
   assert.match(opened[0], /AF-7K9M-4Q2X/);
   assert.doesNotMatch(opened[0], /EAIaIQobChMIPrivateClick123/);
+});
+
+test("capture is blocked before advertising consent", async () => {
+  let requests = 0;
+  let storageReads = 0;
+  let storageWrites = 0;
+
+  globalThis.fetch = async () => {
+    requests += 1;
+    return Response.json({ ok: true });
+  };
+
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      location: {
+        hostname: "www.andrefiker.com.br",
+        search: "?gclid=EAIaIQobChMIPrivateClick123",
+      },
+      localStorage: {
+        getItem: () => null,
+        removeItem: () => undefined,
+        setItem: () => undefined,
+      },
+      sessionStorage: {
+        getItem: () => {
+          storageReads += 1;
+          return null;
+        },
+        removeItem: () => undefined,
+        setItem: () => {
+          storageWrites += 1;
+        },
+      },
+    },
+    writable: true,
+  });
+
+  assert.equal(await captureAdClickReference(), null);
+  assert.equal(requests, 0);
+  assert.equal(storageReads, 0);
+  assert.equal(storageWrites, 0);
+});
+
+test("rejecting advertising prevents events, storage and AF reuse", async () => {
+  const opened: string[] = [];
+  let requests = 0;
+  const storedReference = JSON.stringify({
+    reference: "AF-7K9M-4Q2X",
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+  });
+
+  globalThis.fetch = async () => {
+    requests += 1;
+    return Response.json({ ok: true });
+  };
+
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      dataLayer: [],
+      location: {
+        hash: "#tema-clinico",
+        pathname: "/terapia-guarulhos",
+        search: "?gclid=EAIaIQobChMIPrivateClick123",
+      },
+      localStorage: localStorageWithConsent(false, false),
+      open: (url: string) => opened.push(url),
+      sessionStorage: {
+        getItem: () => storedReference,
+        removeItem: () => undefined,
+        setItem: () => undefined,
+      },
+    },
+    writable: true,
+  });
+
+  openTrackedWhatsApp("Olá André, gostaria de conversar", "hero");
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
+  assert.equal(requests, 0);
+  assert.equal(opened.length, 1);
+  assert.doesNotMatch(opened[0], /AF-|PrivateClick|tema-clinico/);
 });

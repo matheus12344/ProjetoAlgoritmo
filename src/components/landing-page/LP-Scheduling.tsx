@@ -14,7 +14,7 @@ const steps = [
   {
     icon: Search,
     title: "2. Breve Triagem",
-    description: "Batemos um papo rápido para entender sua demanda e alinhar expectativas."
+    description: "Confirmamos modalidade, horários e dúvidas práticas sobre o atendimento."
   },
   {
     icon: CalendarCheck,
@@ -27,8 +27,7 @@ export function LPScheduling() {
   const handleWhatsAppClick = () => {
     openTrackedWhatsApp(
       "Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular",
-      "lp_scheduling",
-      "Começar Agora",
+      "scheduling",
     );
   };
 
@@ -46,7 +45,7 @@ export function LPScheduling() {
             Como Iniciar seu Atendimento?
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            O processo é simples e direto, desenhado para reduzir a burocracia e focar no que importa: você.
+            O primeiro contato serve para verificar modalidade, horários e dúvidas práticas.
           </p>
         </motion.div>
 
@@ -90,7 +89,7 @@ export function LPScheduling() {
             size="lg" 
             className="bg-green-600 hover:bg-green-700 text-white rounded-full px-12 py-7 text-xl font-bold shadow-2xl transition-all hover:scale-105"
           >
-            Começar Agora
+            Conversar pelo WhatsApp
           </Button>
         </motion.div>
       </div>

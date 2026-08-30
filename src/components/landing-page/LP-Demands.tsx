@@ -1,38 +1,38 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Brain, Smile, Users, HeartHandshake, ShieldCheck, Heart } from "lucide-react";
+import { Brain, CalendarRange, Gauge, HeartHandshake, Repeat2, Users } from "lucide-react";
 
 const demands = [
   {
     icon: Brain,
     title: "Ansiedade e Estresse",
-    description: "Ferramentas práticas para lidar com a preocupação excessiva e o esgotamento."
+    description: "Compreensão de padrões ligados à preocupação, tensão e sobrecarga no cotidiano."
   },
   {
-    icon: Heart,
-    title: "Ansiedade e Autoestima Feminina",
-    description: "Terapia Comportamental especializada para mulheres que lidam com sobrecarga emocional, autoestima, pressões nos relacionamentos e ansiedade. Espaço seguro para trabalhar o que mantém esses padrões no seu dia a dia."
+    icon: Gauge,
+    title: "Autocobrança e Perfeccionismo",
+    description: "Análise das regras, expectativas e respostas que mantêm ciclos de cobrança e adiamento."
   },
   {
-    icon: Smile,
-    title: "Depressão e Desânimo",
-    description: "Apoio profissional para reencontrar o sentido e a motivação no dia a dia."
+    icon: Repeat2,
+    title: "Desânimo e Rotina",
+    description: "Observação da rotina, das fontes de sofrimento e das possibilidades de ação no dia a dia."
   },
   {
     icon: HeartHandshake,
-    title: "Autoestima e Autoconfiança",
-    description: "Fortalecimento da relação consigo mesmo e segurança pessoal."
+    title: "Relacionamentos e Limites",
+    description: "Trabalho sobre padrões de interação, comunicação, limites e decisões relacionais."
+  },
+  {
+    icon: CalendarRange,
+    title: "Transições de Vida",
+    description: "Espaço para compreender mudanças pessoais, familiares ou profissionais e suas implicações."
   },
   {
     icon: Users,
-    title: "TDAH e TEA em Adultos",
-    description: "Acompanhamento especializado para manejo de sintomas e adaptação funcional."
-  },
-  {
-    icon: ShieldCheck,
-    title: "Transtornos de Personalidade",
-    description: "Abordagem baseada em evidências para quadros complexos e crônicos."
+    title: "Padrões de Comportamento",
+    description: "Identificação das situações e consequências associadas a padrões que geram sofrimento."
   }
 ];
 
@@ -48,10 +48,11 @@ export function LPDemands() {
           className="mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
-            Tratamento Psicológico em Guarulhos: Como Podemos Ajudar?
+            Questões que podem ser trabalhadas na psicoterapia
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-            A terapia é um espaço seguro para trabalhar demandas que impedem sua evolução pessoal e bem-estar emocional.
+            Na psicoterapia de adultos, o foco é compreender o contexto de cada
+            pessoa e organizar objetivos para o processo terapêutico.
           </p>
         </motion.div>
 

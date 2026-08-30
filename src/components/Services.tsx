@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Brain, Users, Clock, Shield, Video, MessageCircle, Target, ArrowRight, Check, Sparkles, Star } from 'lucide-react'
+import { Brain, Users, Clock, Shield, MessageCircle, Target, ArrowRight, Check, Sparkles } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useScrollAnimation, fadeInUpVariants, scaleInVariants, staggerContainer } from '@/hooks/useScrollAnimation'
@@ -27,7 +27,6 @@ export default function Services() {
         'Técnicas baseadas em evidências',
         'Acompanhamento contínuo'
       ],
-      popular: false,
       gradient: 'from-blue-500 to-blue-600'
     }
   ]
@@ -50,29 +49,29 @@ export default function Services() {
   const specialties = [
     {
       icon: Shield,
-      title: 'Transtornos de Humor e de personalidade',
-      description: 'Atendimento para ansiedade, depressão, bipolaridade, borderline, esquizofrenia',
+      title: 'Ansiedade, estresse e desânimo',
+      description: 'Psicoterapia para compreender padrões relacionados ao sofrimento no cotidiano',
       color: 'text-blue-600',
       bgColor: 'bg-blue-100'
     },
     {
       icon: MessageCircle,
-      title: 'Neurodivergências',
-      description: 'TEA (Transtorno do Espectro Autista) / TDA (Transtorno do Déficit de Atenção)',
+      title: 'Relacionamentos e limites',
+      description: 'Trabalho sobre padrões de interação, comunicação e decisões relacionais',
       color: 'text-purple-600',
       bgColor: 'bg-purple-100'
     },
     {
       icon: Users,
-      title: 'Autoestima e autoconfiança',
-      description: 'Trabalhos específicos para fortalecer autoestima e confiança',
+      title: 'Autocobrança e autoestima',
+      description: 'Compreensão de regras, expectativas e respostas de cobrança no dia a dia',
       color: 'text-pink-600',
       bgColor: 'bg-pink-100'
     },
     {
       icon: Target,
-      title: 'Terapia para mudanças e transições de vida',
-      description: 'Apoio psicológico para lidar com mudanças, transições e desafios da vida pessoal e profissional.',
+      title: 'Mudanças e transições de vida',
+      description: 'Espaço para compreender mudanças pessoais, familiares ou profissionais.',
       color: 'text-green-600',
       bgColor: 'bg-green-100'
     }
@@ -126,14 +125,14 @@ export default function Services() {
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             <Sparkles className="w-5 h-5 text-blue-600" />
-            <span className="text-blue-600 font-medium">Serviços Especializados</span>
+            <span className="text-blue-600 font-medium">Psicoterapia para adultos</span>
           </motion.div>
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             Serviços Terapêuticos
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Ofereço atendimento especializado com abordagens modernas e eficazes
-            para promover seu bem-estar emocional e psicológico.
+            Atendimento particular com Terapia Comportamental e TCC, em sessões
+            individuais de 50 minutos, presencialmente em Guarulhos ou online.
           </p>
         </motion.div>
 
@@ -145,7 +144,7 @@ export default function Services() {
           initial="hidden"
           animate={servicesVisible ? "visible" : "hidden"}
         >
-          {services.map((service, index) => (
+          {services.map((service) => (
             <motion.div
               key={service.id}
               variants={cardVariants}
@@ -158,20 +157,6 @@ export default function Services() {
               <Card className={`border-0 shadow-lg h-full transition-all duration-300 ${
                 selectedService === service.id ? 'ring-2 ring-blue-600 shadow-xl' : ''
               } ${hoveredService === service.id ? 'shadow-xl' : ''}`}>
-                {service.popular && (
-                  <motion.div
-                    className="absolute top-3 right-3 z-20"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.2 + index * 0.06 }}
-                  >
-                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow">
-                      <Star className="w-3.5 h-3.5" />
-                      Mais procurado
-                    </div>
-                  </motion.div>
-                )}
-                
                 <CardHeader className="text-center pb-4">
                   <motion.div
                     className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 bg-gradient-to-br ${service.gradient}`}
@@ -267,7 +252,7 @@ export default function Services() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            Especialidades
+            Temas que podem ser trabalhados
           </motion.h3>
           <motion.div 
             className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"

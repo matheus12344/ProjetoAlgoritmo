@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Linkedin, Youtube, Send, ArrowUp, Heart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { ConsentPreferencesButton } from '@/components/ConsentPreferencesButton'
 
 export default function Footer() {
   const [email, setEmail] = useState('')
@@ -38,7 +39,6 @@ export default function Footer() {
     { name: 'Início', href: '#home' },
     { name: 'Sobre', href: '#about' },
     { name: 'Serviços', href: '#services' },
-    { name: 'Depoimentos', href: '#testimonials' },
     { name: 'FAQ', href: '#faq' },
     { name: 'Blog', href: '#blog' },
     { name: 'Contato', href: '#contact' }
@@ -345,11 +345,10 @@ export default function Footer() {
                   <Heart className="w-4 h-4 text-red-500" />
                 </motion.div>
               </motion.div>
-              <div className="flex space-x-6">
+              <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
                 {[
-                  { href: "/privacy", label: "Política de Privacidade" },
-                  { href: "/terms", label: "Termos de Uso" },
-                  { href: "/ethics", label: "Código de Ética" }
+                  { href: "/privacidade", label: "Política de Privacidade" },
+                  { href: "/cookies", label: "Política de Cookies" }
                 ].map((link, index) => (
                   <motion.div
                     key={link.label}
@@ -368,6 +367,7 @@ export default function Footer() {
                     </Link>
                   </motion.div>
                 ))}
+                <ConsentPreferencesButton className="hover:text-white transition-colors duration-200" />
               </div>
             </div>
           </div>

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, Phone, Mail, MapPin, CheckCircle, Calendar, Heart } from "lucide-react";
+import { Phone, Calendar, Heart } from "lucide-react";
 
 export function Hero() {
   const whatsappMessage = 'Olá André, vim pelo Google e tenho interesse em agendar uma sessão de terapia particular'
@@ -68,20 +68,6 @@ export function Hero() {
               </Badge>
             </motion.div>
 
-            {/* Rating */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="flex items-center justify-center lg:justify-start mb-6"
-            >
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-            </motion.div>
-
             {/* Main Title */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
@@ -99,7 +85,7 @@ export function Hero() {
               transition={{ delay: 0.5 }}
               className="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed"
             >
-              Sou especialista em Terapia Comportamental e atendo pacientes há 12 anos, com especialização em Terapia Comportamental pelo ITCR-Campinas nos formatos presencial e online
+              Sou psicólogo, com 12 anos de prática clínica e formação em Terapia Comportamental pelo ITCR-Campinas. Atendo nos formatos presencial e online.
             </motion.p>
 
             <motion.p className="text-md text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
@@ -220,24 +206,6 @@ export function Hero() {
                         backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(0,0,0,.1) 35px, rgba(0,0,0,.1) 70px)`,
                       }} />
                     </div>
-                  </div>
-                </motion.div>
-
-                {/* Floating Cards */}
-                <motion.div
-                  animate={{
-                    rotate: [-5, 5, -5],
-                  }}
-                  transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                  }}
-                  className="absolute -top-4 -right-4 bg-white dark:bg-slate-800 rounded-xl p-3 shadow-lg hidden lg:flex"
-                >
-                  <div className="flex items-center space-x-2">
-                    <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">5.0</span>
                   </div>
                 </motion.div>
 

@@ -7,6 +7,7 @@ import PostContent from '@/components/PostContent'
 import BlogLikeButton from '@/components/BlogLikeButton'
 import BlogComments from '@/components/BlogComments'
 import { prisma } from '@/lib/prisma'
+import { isPublicBlogPost } from '@/lib/public-blog'
 
 interface PageProps {
   params: {
@@ -20,7 +21,7 @@ async function getPost(slug: string) {
     // If DATABASE_URL is set, read from Prisma
     if (process.env.DATABASE_URL) {
       const post = await prisma.post.findUnique({ where: { slug }, include: { comments: true } })
-      if (!post) return null
+      if (!post || !isPublicBlogPost(post)) return null
       return {
         id: post.id,
         title: post.title,
@@ -40,7 +41,7 @@ async function getPost(slug: string) {
     const posts = JSON.parse(data)
 
     const post = posts.find((p: any) => p.slug === slug)
-    if (!post) return null
+    if (!post || !isPublicBlogPost(post)) return null
 
     return post
   } catch (err) {

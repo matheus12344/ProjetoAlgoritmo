@@ -11,11 +11,11 @@ import {
 const faqs = [
   {
     question: "Onde as consultas são realizadas?",
-    answer: "As consultas presenciais ocorrem em nosso consultório em Guarulhos. Também oferecemos a modalidade online, com a mesma eficácia e ética, através de plataformas seguras."
+    answer: "As consultas presenciais ocorrem no Centro de Guarulhos. Também há atendimento online para adultos."
   },
   {
     question: "Quanto tempo dura cada sessão?",
-    answer: "As sessões individuais têm duração média de 50 minutos, ocorrendo geralmente uma vez por semana, conforme a necessidade do caso."
+    answer: "As sessões individuais têm duração de 50 minutos. A frequência é combinada de acordo com o processo terapêutico."
   },
   {
     question: "Atende convênios médicos?",
@@ -23,11 +23,11 @@ const faqs = [
   },
   {
     question: "Como funciona a dinâmica das sessões?",
-    answer: "A terapia comportamental é focada em entender como você interage com o ambiente e como podemos modificar padrões que geram sofrimento, utilizando estratégias práticas e colaborativas."
+    answer: "A Terapia Comportamental e a TCC ajudam a compreender relações entre contexto, pensamentos, emoções e ações. Os objetivos são definidos e revistos de forma colaborativa."
   },
   {
     question: "Qual o valor da consulta?",
-    answer: "O valor da sessão é R$250. O atendimento é exclusivamente particular — não aceitamos convênios. O pagamento pode ser feito via Pix, cartão ou dinheiro."
+    answer: "O valor atual da sessão particular é R$250. As formas de pagamento podem ser confirmadas no contato de agendamento."
   }
 ];
 
