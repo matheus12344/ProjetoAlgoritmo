@@ -45,10 +45,10 @@ test("both retained ACT posts are explicitly unpublished", () => {
   }
 });
 
-test("missing and malformed dates preserve the existing immediate-publish behavior", () => {
+test("missing dates publish immediately but malformed dates fail closed", () => {
   assert.equal(isPublicBlogPost({ slug: "sem-data" }, NOW), true);
   assert.equal(
     isPublicBlogPost({ slug: "data-invalida", publishAt: "invalida" }, NOW),
-    true,
+    false,
   );
 });

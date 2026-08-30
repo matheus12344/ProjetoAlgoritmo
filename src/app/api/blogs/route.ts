@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 import { prisma } from "@/lib/prisma";
+import { isBlogAdministrationEnabled } from "@/lib/blog-admin-access";
 import {
   isExplicitlyUnpublishedBlogPost,
   isPublicBlogPost,
@@ -27,11 +28,14 @@ function slugify(title: string) {
 
 export async function GET(req: Request) {
   try {
+    const all = new URL(req.url).searchParams.get("all") === "true";
+    if (all && !isBlogAdministrationEnabled()) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
     // If DATABASE_URL is set, read from Prisma DB
     if (process.env.DATABASE_URL) {
       try {
-        const url = new URL(req.url);
-        const all = url.searchParams.get("all") === "true";
         if (all) {
           const posts = await prisma.post.findMany({ include: { comments: true }, orderBy: { createdAt: 'desc' } });
           return NextResponse.json(
@@ -60,17 +64,11 @@ export async function GET(req: Request) {
     const raw = await fs.readFile(postsPath, "utf8");
     const posts = raw ? JSON.parse(raw) : [];
 
-    // Support query param `all=true` to return all posts (including scheduled)
-    try {
-      const url = new URL(req.url);
-      const all = url.searchParams.get("all") === "true";
-      if (all) {
-        return NextResponse.json(
-          posts.filter((post: any) => !isExplicitlyUnpublishedBlogPost(post)),
-        );
-      }
-    } catch (err) {
-      // ignore URL parsing errors and fall through to default behavior
+    // Local-only administrative view, gated above.
+    if (all) {
+      return NextResponse.json(
+        posts.filter((post: any) => !isExplicitlyUnpublishedBlogPost(post)),
+      );
     }
 
     // Default: only return posts whose publishAt is not in the future
@@ -89,6 +87,10 @@ async function savePosts(posts: any[]) {
 }
 
 export async function POST(req: Request) {
+  if (!isBlogAdministrationEnabled()) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   try {
     // If DATABASE_URL is present use Prisma to persist posts
     const body = await req.json();

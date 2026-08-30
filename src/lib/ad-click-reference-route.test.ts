@@ -40,7 +40,12 @@ test("stores only click correlation and returns only the opaque reference", asyn
   process.env.SUPABASE_URL = "https://example.supabase.co";
   process.env.SUPABASE_SERVICE_ROLE_KEY = "server-only-test-key";
 
-  const upstreamRequests: Array<{ method: string; url: string; body: string }> = [];
+  const upstreamRequests: Array<{
+    body: string;
+    method: string;
+    signal: AbortSignal | null | undefined;
+    url: string;
+  }> = [];
   const expiry = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
 
   globalThis.fetch = async (input, init) => {
@@ -50,6 +55,7 @@ test("stores only click correlation and returns only the opaque reference", asyn
       method,
       url,
       body: typeof init?.body === "string" ? init.body : "",
+      signal: init?.signal,
     });
 
     if (method === "DELETE") {
@@ -86,6 +92,14 @@ test("stores only click correlation and returns only the opaque reference", asyn
   assert.equal(isValidAdReference(String(result.reference)), true);
   assert.equal(result.expiresAt, expiry);
   assert.equal("clickId" in result, false);
+
+  const deadlineSignals = upstreamRequests.map((request) => request.signal);
+  assert.equal(deadlineSignals.length, 3);
+  assert.ok(deadlineSignals[0] instanceof AbortSignal);
+  assert.equal(
+    deadlineSignals.every((signal) => signal === deadlineSignals[0]),
+    true,
+  );
 
   const insert = upstreamRequests.find((request) => request.method === "POST");
   assert.ok(insert);

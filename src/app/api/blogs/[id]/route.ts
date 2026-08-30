@@ -3,20 +3,21 @@ import fs from "fs/promises";
 import path from "path";
 import { BlogPost } from "@/types/blog";
 import { prisma } from '@/lib/prisma'
-import { isExplicitlyUnpublishedBlogPost } from '@/lib/public-blog'
+import { isBlogAdministrationEnabled } from "@/lib/blog-admin-access";
+import { isPublicBlogPost } from '@/lib/public-blog'
 
 const postsPath = path.join(process.cwd(), "db", "posts.json");
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // If DB configured, use Prisma
-    const resolvedParams = (await (params as any)) as { id: string };
+    const resolvedParams = await params;
     if (process.env.DATABASE_URL) {
       const post = await prisma.post.findUnique({ where: { id: resolvedParams.id }, include: { comments: true } });
-      if (!post || isExplicitlyUnpublishedBlogPost(post)) {
+      if (!post || !isPublicBlogPost(post)) {
         return NextResponse.json({ error: "Post not found" }, { status: 404 });
       }
       return NextResponse.json(post as any);
@@ -25,7 +26,7 @@ export async function GET(
     const raw = await fs.readFile(postsPath, "utf8");
     const posts: BlogPost[] = JSON.parse(raw);
     const post = posts.find((p) => p.id === resolvedParams.id);
-    if (!post || isExplicitlyUnpublishedBlogPost(post)) {
+    if (!post || !isPublicBlogPost(post)) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
@@ -40,10 +41,14 @@ export async function GET(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  if (!isBlogAdministrationEnabled()) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   try {
-    const resolvedParams = (await (params as any)) as { id: string };
+    const resolvedParams = await params;
     if (process.env.DATABASE_URL) {
       const found = await prisma.post.findUnique({ where: { id: resolvedParams.id } });
       if (!found) return NextResponse.json({ error: "Post not found" }, { status: 404 });

@@ -50,7 +50,7 @@ export function isPublicBlogPost(
       : Date.parse(post.publishAt);
 
   if (Number.isNaN(publishedAt)) {
-    return true;
+    return false;
   }
 
   const nowMs = now instanceof Date ? now.getTime() : now;

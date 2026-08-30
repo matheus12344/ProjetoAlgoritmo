@@ -264,31 +264,72 @@ export function openTrackedWhatsApp(
 
   const phoneNumber = "5511961820112";
 
+  let pendingWindow: Window | null = null;
+  try {
+    pendingWindow = window.open("about:blank", "_blank");
+    if (pendingWindow) {
+      try {
+        pendingWindow.opener = null;
+      } catch {
+        pendingWindow.close();
+        pendingWindow = null;
+      }
+    }
+  } catch {
+    // Popup blocking must not prevent the contact attempt. The current page
+    // becomes the fail-open target after the attribution attempt completes.
+  }
+
+  let capturePromise: Promise<string | null>;
+  try {
+    // Start capture synchronously in the click handler. Basic Consent remains
+    // authoritative inside captureAdClickReference(), so rejected visitors do
+    // not create a request or touch advertising storage.
+    capturePromise = captureAdClickReference().catch(() => null);
+  } catch {
+    capturePromise = Promise.resolve(null);
+  }
+
   let redirected = false;
   const openWhatsApp = () => {
     if (redirected) return;
     redirected = true;
 
-    void Promise.race([
-      captureAdClickReference(),
-      new Promise<null>((resolve) => setTimeout(() => resolve(null), 800)),
-    ]).then((capturedReference) => {
+    void capturePromise.then((capturedReference) => {
+      const allowedReference = hasAdvertisingConsent()
+        ? capturedReference ?? readStoredAdReference()
+        : null;
       const messageWithReference = appendAdReference(
         message,
-        capturedReference ?? readStoredAdReference(),
+        allowedReference,
       );
       const destination = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(messageWithReference)}`;
-      window.open(destination, "_blank", "noopener,noreferrer");
+
+      try {
+        if (pendingWindow && !pendingWindow.closed) {
+          pendingWindow.location.replace(destination);
+          return;
+        }
+      } catch {
+        // A closed or inaccessible pending window falls through to same-tab
+        // navigation. The contact remains possible even without attribution.
+      }
+
+      window.location.assign(destination);
     });
   };
 
-  trackContactAttempt(
-    {
-      channel: "whatsapp",
-      placement,
-    },
-    openWhatsApp,
-  );
+  try {
+    trackContactAttempt(
+      {
+        channel: "whatsapp",
+        placement,
+      },
+      openWhatsApp,
+    );
+  } catch {
+    openWhatsApp();
+  }
 }
 
 export function openTrackedPhoneCall(placement: ContactPlacement) {

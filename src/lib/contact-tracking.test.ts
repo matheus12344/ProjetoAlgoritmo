@@ -33,6 +33,33 @@ function localStorageWithConsent(analytics: boolean, advertising: boolean) {
   };
 }
 
+function createDeferred<T>() {
+  let resolve!: (value: T | PromiseLike<T>) => void;
+  const promise = new Promise<T>((resolvePromise) => {
+    resolve = resolvePromise;
+  });
+
+  return { promise, resolve };
+}
+
+function createPopupTarget() {
+  const navigations: string[] = [];
+  const popup = {
+    closed: false,
+    opener: {} as unknown,
+    location: {
+      replace: (destination: string) => navigations.push(destination),
+    },
+  };
+
+  return { navigations, popup };
+}
+
+async function flushAsyncWork() {
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  await new Promise((resolve) => setTimeout(resolve, 0));
+}
+
 afterEach(() => {
   clearAdClickReference();
   globalThis.fetch = originalFetch;
@@ -142,7 +169,8 @@ test("trackContactAttempt still completes when Google scripts are unavailable", 
 });
 
 test("WhatsApp receives the opaque reference but never the click ID", async () => {
-  const opened: string[] = [];
+  const openCalls: Array<{ target: string; url: string }> = [];
+  const { navigations, popup } = createPopupTarget();
   const storage = new Map<string, string>();
   const reference = "AF-7K9M-4Q2X";
   const expiresAt = new Date(
@@ -162,7 +190,10 @@ test("WhatsApp receives the opaque reference but never the click ID", async () =
         search: "?gclid=EAIaIQobChMIPrivateClick123",
       },
       localStorage: localStorageWithConsent(false, true),
-      open: (url: string) => opened.push(url),
+      open: (url: string, target: string) => {
+        openCalls.push({ target, url });
+        return popup;
+      },
       sessionStorage: {
         getItem: (key: string) => storage.get(key) ?? null,
         removeItem: (key: string) => storage.delete(key),
@@ -177,12 +208,193 @@ test("WhatsApp receives the opaque reference but never the click ID", async () =
     "hero",
   );
 
-  await new Promise((resolve) => setTimeout(resolve, 0));
-  await new Promise((resolve) => setTimeout(resolve, 0));
+  await flushAsyncWork();
 
-  assert.equal(opened.length, 1);
-  assert.match(opened[0], /AF-7K9M-4Q2X/);
-  assert.doesNotMatch(opened[0], /EAIaIQobChMIPrivateClick123/);
+  assert.deepEqual(openCalls, [{ target: "_blank", url: "about:blank" }]);
+  assert.equal(popup.opener, null);
+  assert.equal(navigations.length, 1);
+  assert.match(navigations[0], /AF-7K9M-4Q2X/);
+  assert.doesNotMatch(navigations[0], /EAIaIQobChMIPrivateClick123/);
+});
+
+test("a delayed AF response keeps the reserved popup until capture finishes", async () => {
+  const captureResponse = createDeferred<Response>();
+  const { navigations, popup } = createPopupTarget();
+  const openCalls: string[] = [];
+  let requests = 0;
+  const reference = "AF-7K9M-4Q2X";
+  const expiresAt = new Date(
+    Date.now() + 90 * 24 * 60 * 60 * 1000,
+  ).toISOString();
+
+  globalThis.fetch = () => {
+    requests += 1;
+    return captureResponse.promise;
+  };
+
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      dataLayer: [],
+      location: {
+        pathname: "/terapia-guarulhos",
+        search: "?gclid=EAIaIQobChMIPrivateClick123",
+      },
+      localStorage: localStorageWithConsent(false, true),
+      open: (url: string) => {
+        openCalls.push(url);
+        return popup;
+      },
+      sessionStorage: {
+        getItem: () => null,
+        removeItem: () => undefined,
+        setItem: () => undefined,
+      },
+    },
+    writable: true,
+  });
+
+  openTrackedWhatsApp("Olá André", "hero");
+
+  assert.equal(requests, 1);
+  assert.deepEqual(openCalls, ["about:blank"]);
+  await new Promise((resolve) => setTimeout(resolve, 850));
+  assert.deepEqual(navigations, []);
+
+  captureResponse.resolve(Response.json({ ok: true, reference, expiresAt }));
+  await flushAsyncWork();
+
+  assert.equal(navigations.length, 1);
+  assert.match(navigations[0], /AF-7K9M-4Q2X/);
+  assert.doesNotMatch(navigations[0], /PrivateClick123/);
+});
+
+test("an invalid AF response fails open without exposing the click ID", async () => {
+  const { navigations, popup } = createPopupTarget();
+  const expiresAt = new Date(
+    Date.now() + 90 * 24 * 60 * 60 * 1000,
+  ).toISOString();
+
+  globalThis.fetch = async () =>
+    Response.json({ ok: true, reference: "not-an-af-reference", expiresAt });
+
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      dataLayer: [],
+      location: {
+        pathname: "/terapia-guarulhos",
+        search: "?gclid=EAIaIQobChMIPrivateClick123",
+      },
+      localStorage: localStorageWithConsent(false, true),
+      open: () => popup,
+      sessionStorage: {
+        getItem: () => null,
+        removeItem: () => undefined,
+        setItem: () => undefined,
+      },
+    },
+    writable: true,
+  });
+
+  openTrackedWhatsApp("Olá André", "hero");
+  await flushAsyncWork();
+
+  assert.equal(navigations.length, 1);
+  assert.doesNotMatch(
+    navigations[0],
+    /not-an-af-reference|PrivateClick123|Referência do anúncio/,
+  );
+});
+
+test("revoking consent during capture discards the late AF response", async () => {
+  const captureResponse = createDeferred<Response>();
+  const { navigations, popup } = createPopupTarget();
+  const storage = new Map<string, string>();
+  let advertisingConsent = true;
+  const reference = "AF-7K9M-4Q2X";
+  const expiresAt = new Date(
+    Date.now() + 90 * 24 * 60 * 60 * 1000,
+  ).toISOString();
+
+  globalThis.fetch = () => captureResponse.promise;
+
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      dataLayer: [],
+      location: {
+        pathname: "/terapia-guarulhos",
+        search: "?gclid=EAIaIQobChMIPrivateClick123",
+      },
+      localStorage: {
+        getItem: (key: string) =>
+          key === CONSENT_STORAGE_KEY
+            ? consentValue(false, advertisingConsent)
+            : null,
+        removeItem: () => undefined,
+        setItem: () => undefined,
+      },
+      open: () => popup,
+      sessionStorage: {
+        getItem: (key: string) => storage.get(key) ?? null,
+        removeItem: (key: string) => storage.delete(key),
+        setItem: (key: string, value: string) => storage.set(key, value),
+      },
+    },
+    writable: true,
+  });
+
+  openTrackedWhatsApp("Olá André", "hero");
+  advertisingConsent = false;
+  clearAdClickReference();
+  captureResponse.resolve(Response.json({ ok: true, reference, expiresAt }));
+  await flushAsyncWork();
+
+  assert.equal(storage.size, 0);
+  assert.equal(navigations.length, 1);
+  assert.doesNotMatch(
+    navigations[0],
+    /AF-7K9M-4Q2X|PrivateClick123|Referência do anúncio/,
+  );
+});
+
+test("a blocked popup falls back to same-tab WhatsApp navigation", async () => {
+  const sameTabNavigations: string[] = [];
+  const reference = "AF-7K9M-4Q2X";
+  const expiresAt = new Date(
+    Date.now() + 90 * 24 * 60 * 60 * 1000,
+  ).toISOString();
+
+  globalThis.fetch = async () =>
+    Response.json({ ok: true, reference, expiresAt });
+
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      dataLayer: [],
+      location: {
+        assign: (destination: string) => sameTabNavigations.push(destination),
+        pathname: "/terapia-guarulhos",
+        search: "?gclid=EAIaIQobChMIPrivateClick123",
+      },
+      localStorage: localStorageWithConsent(false, true),
+      open: () => null,
+      sessionStorage: {
+        getItem: () => null,
+        removeItem: () => undefined,
+        setItem: () => undefined,
+      },
+    },
+    writable: true,
+  });
+
+  openTrackedWhatsApp("Olá André", "hero");
+  await flushAsyncWork();
+
+  assert.equal(sameTabNavigations.length, 1);
+  assert.match(sameTabNavigations[0], /AF-7K9M-4Q2X/);
+  assert.doesNotMatch(sameTabNavigations[0], /PrivateClick123/);
 });
 
 test("capture is blocked before advertising consent", async () => {
@@ -228,7 +440,7 @@ test("capture is blocked before advertising consent", async () => {
 });
 
 test("rejecting advertising prevents events, storage and AF reuse", async () => {
-  const opened: string[] = [];
+  const { navigations, popup } = createPopupTarget();
   let requests = 0;
   const storedReference = JSON.stringify({
     reference: "AF-7K9M-4Q2X",
@@ -250,7 +462,7 @@ test("rejecting advertising prevents events, storage and AF reuse", async () => 
         search: "?gclid=EAIaIQobChMIPrivateClick123",
       },
       localStorage: localStorageWithConsent(false, false),
-      open: (url: string) => opened.push(url),
+      open: () => popup,
       sessionStorage: {
         getItem: () => storedReference,
         removeItem: () => undefined,
@@ -261,9 +473,13 @@ test("rejecting advertising prevents events, storage and AF reuse", async () => 
   });
 
   openTrackedWhatsApp("Olá André, gostaria de conversar", "hero");
-  await new Promise((resolve) => setTimeout(resolve, 0));
+  await flushAsyncWork();
 
   assert.equal(requests, 0);
-  assert.equal(opened.length, 1);
-  assert.doesNotMatch(opened[0], /AF-|PrivateClick|tema-clinico/);
+  assert.deepEqual(window.dataLayer, []);
+  assert.equal(navigations.length, 1);
+  assert.doesNotMatch(
+    navigations[0],
+    /AF-|PrivateClick|tema-clinico|Referência do anúncio/,
+  );
 });

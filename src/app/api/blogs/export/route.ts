@@ -1,9 +1,14 @@
 import { promises as fs } from 'fs'
 import path from 'path'
 import { prisma } from '@/lib/prisma'
+import { isBlogAdministrationEnabled } from '@/lib/blog-admin-access'
 import { isExplicitlyUnpublishedBlogPost } from '@/lib/public-blog'
 
 export async function GET() {
+  if (!isBlogAdministrationEnabled()) {
+    return Response.json({ error: 'Not found' }, { status: 404 })
+  }
+
   try {
     const postsPath = path.join(process.cwd(), 'db', 'posts.json')
     if (process.env.DATABASE_URL) {

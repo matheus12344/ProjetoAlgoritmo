@@ -62,7 +62,10 @@ function createReferenceCode(): string {
   return `AF-${characters.slice(0, 4)}-${characters.slice(4)}`;
 }
 
-async function purgeExpiredReferences(config: StorageConfig) {
+async function purgeExpiredReferences(
+  config: StorageConfig,
+  deadlineSignal: AbortSignal,
+) {
   const url = new URL("/rest/v1/ad_click_references", config.url);
   url.searchParams.set("expires_at", `lt.${new Date().toISOString()}`);
 
@@ -74,7 +77,7 @@ async function purgeExpiredReferences(config: StorageConfig) {
         Prefer: "return=minimal",
       },
       cache: "no-store",
-      signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
+      signal: deadlineSignal,
     });
   } catch {
     // Retention cleanup is opportunistic. A failed purge must not leak an
@@ -85,7 +88,12 @@ async function purgeExpiredReferences(config: StorageConfig) {
 async function findStoredReference(
   config: StorageConfig,
   capture: AdClickIdentifier,
+  deadlineSignal: AbortSignal,
 ): Promise<StoredReference | null> {
+  if (deadlineSignal.aborted) {
+    return null;
+  }
+
   const url = new URL("/rest/v1/ad_click_references", config.url);
   url.searchParams.set("select", "reference_code,expires_at");
   url.searchParams.set("click_id_type", `eq.${capture.clickIdType}`);
@@ -97,7 +105,7 @@ async function findStoredReference(
     const response = await fetch(url, {
       headers: storageHeaders(config),
       cache: "no-store",
-      signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
+      signal: deadlineSignal,
     });
     if (!response.ok) {
       return null;
@@ -113,15 +121,24 @@ async function findStoredReference(
 async function storeReference(
   config: StorageConfig,
   capture: AdClickIdentifier,
+  deadlineSignal: AbortSignal,
 ): Promise<StoredReference | null> {
-  await purgeExpiredReferences(config);
+  await purgeExpiredReferences(config, deadlineSignal);
 
-  const existing = await findStoredReference(config, capture);
+  if (deadlineSignal.aborted) {
+    return null;
+  }
+
+  const existing = await findStoredReference(config, capture, deadlineSignal);
   if (existing) {
     return existing;
   }
 
   for (let attempt = 0; attempt < 3; attempt += 1) {
+    if (deadlineSignal.aborted) {
+      return null;
+    }
+
     const url = new URL("/rest/v1/ad_click_references", config.url);
     url.searchParams.set("on_conflict", "click_id_type,click_id");
     url.searchParams.set("select", "reference_code,expires_at");
@@ -141,7 +158,7 @@ async function storeReference(
           },
         ]),
         cache: "no-store",
-        signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
+        signal: deadlineSignal,
       });
 
       if (!response.ok) {
@@ -153,7 +170,11 @@ async function storeReference(
         return rows[0];
       }
 
-      const duplicate = await findStoredReference(config, capture);
+      const duplicate = await findStoredReference(
+        config,
+        capture,
+        deadlineSignal,
+      );
       if (duplicate) {
         return duplicate;
       }
@@ -166,6 +187,8 @@ async function storeReference(
 }
 
 export async function POST(request: Request) {
+  const deadlineSignal = AbortSignal.timeout(UPSTREAM_TIMEOUT_MS);
+
   if (!isSameOrigin(request.headers)) {
     return failure("forbidden", 403);
   }
@@ -197,7 +220,7 @@ export async function POST(request: Request) {
     return failure("not_configured", 503);
   }
 
-  const stored = await storeReference(config, capture);
+  const stored = await storeReference(config, capture, deadlineSignal);
   if (!stored) {
     return failure("storage_unavailable", 502);
   }

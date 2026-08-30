@@ -1,14 +1,20 @@
 # Google Ads — conversões offline da terapia
 
-Este fluxo mede duas ações reais sem enviar ao Google nome, telefone, e-mail,
-mensagem do WhatsApp, diagnóstico ou motivo clínico:
+> **Status: preparado, não operacional.** Nenhum upload offline foi executado ou
+> autorizado. Este documento é um runbook futuro para o subconjunto de visitas
+> que aceitou publicidade; não autoriza importar dados nem mudar conversões.
+
+Este fluxo foi preparado para correlacionar duas ações reais sem enviar ao
+Google nome, telefone, e-mail, mensagem do WhatsApp, diagnóstico ou motivo
+clínico:
 
 - `Lead qualificado`
 - `Sessão agendada`
 
 ## O que a página registra
 
-Quando a visita chega com `gclid`, `gbraid` ou `wbraid`, o servidor grava apenas:
+Quando a visita chega com `gclid`, `gbraid` ou `wbraid` **e a pessoa já concedeu
+consentimento de publicidade**, o servidor pode gravar apenas:
 
 - tipo do identificador;
 - identificador de clique, preservando maiúsculas e minúsculas;
@@ -17,9 +23,23 @@ Quando a visita chega com `gclid`, `gbraid` ou `wbraid`, o servidor grava apenas
 
 A linha deixa de ser utilizável em 90 dias e é removida pela limpeza da próxima
 captura. A tabela tem RLS habilitado, nenhuma política pública e acesso somente
-pela chave de serviço no servidor. O navegador e o WhatsApp nunca recebem o
-identificador original. A mensagem pré-preenchida do WhatsApp recebe somente a
+pela chave de serviço no servidor. A API nunca devolve o identificador original
+ao código cliente ou ao WhatsApp. A URL de chegada pode conter esse identificador
+por definição do clique do Google; a mensagem pré-preenchida recebe somente a
 referência aleatória.
+
+A captura começa no mesmo gesto que abre o WhatsApp. Uma janela vazia segura é
+reservada imediatamente e só é direcionada depois que a rota responde. A rota
+usa um único prazo total de 8 segundos para limpeza, consulta e gravação. Se a
+captura falhar, devolver referência inválida ou perder o consentimento enquanto
+estiver em curso, o contato continua sem referência AF e sem expor o click ID.
+
+Sem decisão de consentimento, com publicidade rejeitada ou após revogação:
+
+- o click ID não é lido pelo fluxo AF nem enviado à rota;
+- nenhuma referência AF é criada ou reutilizada;
+- o WhatsApp abre sem referência;
+- não se deve reconstruir atribuição por telefone, nome, horário ou mensagem.
 
 ## Quando registrar cada evento
 
@@ -55,9 +75,12 @@ do modelo oficial atual de conversões originadas de cliques.
 3. Use exatamente `Lead qualificado` ou `Sessão agendada` em `Conversion Name`.
 4. Use o horário real no formato `yyyy-MM-dd HH:mm:ss`.
 5. Deixe valor e moeda vazios: as duas ações foram configuradas sem valor.
-6. Deixe `Ad User Data` e `Ad Personalization` vazios. Os termos da conta estão
-   aceitos, mas isso não equivale a consentimento individual; este fluxo também
-   não envia dados fornecidos pela pessoa.
+6. Não declare `Ad User Data` nem `Ad Personalization` como concedidos. A
+   implementação atual mantém `ad_user_data = denied` e
+   `ad_personalization = denied`; o consentimento de publicidade que permite a
+   captura AF não autoriza inferir outro sinal. Antes de qualquer upload real,
+   revalide o esquema vigente do Google e a decisão jurídico-operacional sobre
+   esses campos. Até lá, o upload permanece bloqueado.
 
 Exemplo estrutural, com identificador fictício — nunca faça upload deste exemplo:
 
@@ -71,7 +94,11 @@ capturada como `gbraid` ou `wbraid`, não cole o valor nessa coluna por suposiç
 use o mapeamento correspondente no Google Ads Data Manager. A captura desses
 identificadores já fica preservada para essa evolução.
 
-## Enviar no Google Ads
+## Enviar no Google Ads — procedimento futuro, ainda bloqueado
+
+Os passos abaixo servem apenas para uma futura execução autorizada. Não use
+`Aplicar` enquanto a importação não tiver sido formalmente operacionalizada e
+os campos de consentimento não tiverem sido validados.
 
 1. Abra `Metas → Conversões → Uploads`.
 2. Selecione `Novo upload`.
@@ -82,13 +109,19 @@ identificadores já fica preservada para essa evolução.
 
 O Google recomenda aguardar de 4 a 6 horas após criar uma nova ação antes do
 primeiro upload, aceita GCLIDs por até 90 dias e recomenda uploads frequentes e
-consistentes. Com a conta sem saldo, não há conversão real para importar agora;
-o primeiro arquivo deve ser criado apenas quando uma referência real chegar.
+consistentes. Com a conta sem saldo, não há conversão real para importar agora.
+Uma referência real é condição necessária, mas não suficiente: o primeiro
+arquivo só pode ser criado depois da operacionalização explícita do processo.
 
 ## Limites deliberados
 
 - Conversões otimizadas para leads permanecem desativadas.
-- Nenhum dado pessoal ou clínico é enviado ao Google.
+- A atribuição é somente opt-in: rejeições e ausência de consentimento ficam
+  deliberadamente sem AF e não devem ser estimadas ou completadas manualmente.
+- O fluxo está preparado, mas a rotina de importação ainda não está operacional.
+- Nenhum dado diretamente identificável ou clínico é enviado ao Google; o
+  identificador de clique é pseudônimo e permanece sujeito a minimização,
+  retenção e consentimento.
 - Nenhum conteúdo do WhatsApp é lido pelo site.
 - Nenhum upload vazio, fictício ou retroativo deve ser aplicado.
 - O saldo da conta não faz parte deste fluxo.

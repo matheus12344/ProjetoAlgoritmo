@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 import { prisma } from '@/lib/prisma'
+import { isPublicBlogPost } from '@/lib/public-blog'
 
 const postsPath = path.join(process.cwd(), "db", "posts.json");
 
@@ -14,13 +15,15 @@ interface Comment {
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const resolvedParams = (await (params as any)) as { id: string };
+    const resolvedParams = await params;
     if (process.env.DATABASE_URL) {
       const post = await prisma.post.findUnique({ where: { id: resolvedParams.id }, include: { comments: true } });
-      if (!post) return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      if (!post || !isPublicBlogPost(post)) {
+        return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      }
       return NextResponse.json(post.comments || []);
     }
 
@@ -28,7 +31,7 @@ export async function GET(
     const posts = JSON.parse(raw);
 
     const post = posts.find((p: any) => p.id === resolvedParams.id);
-    if (!post) {
+    if (!post || !isPublicBlogPost(post)) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
@@ -43,10 +46,10 @@ export async function GET(
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const resolvedParams = (await (params as any)) as { id: string };
+    const resolvedParams = await params;
     const body = await request.json();
     const { content, author } = body;
 
@@ -59,7 +62,9 @@ export async function POST(
 
     if (process.env.DATABASE_URL) {
       const post = await prisma.post.findUnique({ where: { id: resolvedParams.id } });
-      if (!post) return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      if (!post || !isPublicBlogPost(post)) {
+        return NextResponse.json({ error: "Post not found" }, { status: 404 });
+      }
       const comment = await prisma.comment.create({ data: {
         content,
         author,
@@ -73,7 +78,7 @@ export async function POST(
     const posts = JSON.parse(raw);
 
     const post = posts.find((p: any) => p.id === resolvedParams.id);
-    if (!post) {
+    if (!post || !isPublicBlogPost(post)) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
