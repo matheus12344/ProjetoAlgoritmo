@@ -60,6 +60,18 @@ async function flushAsyncWork() {
   await new Promise((resolve) => setTimeout(resolve, 0));
 }
 
+async function flushMicrotasks() {
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  await new Promise<void>((resolve) => setImmediate(resolve));
+}
+
+function readWhatsAppMessage(destination: string) {
+  return new URL(destination).searchParams.get("text") ?? "";
+}
+
 afterEach(() => {
   clearAdClickReference();
   globalThis.fetch = originalFetch;
@@ -217,7 +229,8 @@ test("WhatsApp receives the opaque reference but never the click ID", async () =
   assert.doesNotMatch(navigations[0], /EAIaIQobChMIPrivateClick123/);
 });
 
-test("a delayed AF response keeps the reserved popup until capture finishes", async () => {
+test("a valid AF response before the client deadline uses the reserved popup once", async (context) => {
+  context.mock.timers.enable({ apis: ["setTimeout"] });
   const captureResponse = createDeferred<Response>();
   const { navigations, popup } = createPopupTarget();
   const openCalls: string[] = [];
@@ -258,15 +271,173 @@ test("a delayed AF response keeps the reserved popup until capture finishes", as
 
   assert.equal(requests, 1);
   assert.deepEqual(openCalls, ["about:blank"]);
-  await new Promise((resolve) => setTimeout(resolve, 850));
+  context.mock.timers.tick(2_999);
+  await flushMicrotasks();
   assert.deepEqual(navigations, []);
 
   captureResponse.resolve(Response.json({ ok: true, reference, expiresAt }));
-  await flushAsyncWork();
+  await flushMicrotasks();
 
   assert.equal(navigations.length, 1);
   assert.match(navigations[0], /AF-7K9M-4Q2X/);
   assert.doesNotMatch(navigations[0], /PrivateClick123/);
+
+  context.mock.timers.tick(1);
+  await flushMicrotasks();
+  assert.equal(navigations.length, 1);
+});
+
+test("a fetch that never resolves is abandoned after the 3000 ms client deadline", async (context) => {
+  context.mock.timers.enable({ apis: ["setTimeout"] });
+  const { navigations, popup } = createPopupTarget();
+  let requestSignal: AbortSignal | null = null;
+  let popupOpenCount = 0;
+
+  globalThis.fetch = (_input, init) => {
+    requestSignal = init?.signal ?? null;
+    return new Promise<Response>(() => undefined);
+  };
+
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      dataLayer: [],
+      location: {
+        pathname: "/terapia-guarulhos",
+        search: "?gclid=EAIaIQobChMIPrivateClick123",
+      },
+      localStorage: localStorageWithConsent(false, true),
+      open: () => {
+        popupOpenCount += 1;
+        return popup;
+      },
+      sessionStorage: {
+        getItem: () => null,
+        removeItem: () => undefined,
+        setItem: () => undefined,
+      },
+    },
+    writable: true,
+  });
+
+  openTrackedWhatsApp("Quero conversar", "hero");
+  await flushMicrotasks();
+
+  context.mock.timers.tick(2_999);
+  await flushMicrotasks();
+  assert.deepEqual(navigations, []);
+
+  context.mock.timers.tick(1);
+  await flushMicrotasks();
+
+  assert.equal(requestSignal?.aborted, true);
+  assert.equal(popupOpenCount, 1);
+  assert.equal(navigations.length, 1);
+  assert.equal(readWhatsAppMessage(navigations[0]), "Quero conversar");
+});
+
+test("an AF response after the client deadline is ignored without a second redirect", async (context) => {
+  context.mock.timers.enable({ apis: ["setTimeout"] });
+  const captureResponse = createDeferred<Response>();
+  const { navigations, popup } = createPopupTarget();
+  const storage = new Map<string, string>();
+  const reference = "AF-7K9M-4Q2X";
+  const expiresAt = new Date(
+    Date.now() + 90 * 24 * 60 * 60 * 1000,
+  ).toISOString();
+
+  globalThis.fetch = () => captureResponse.promise;
+
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      dataLayer: [],
+      location: {
+        pathname: "/terapia-guarulhos",
+        search: "?gclid=EAIaIQobChMIPrivateClick123",
+      },
+      localStorage: localStorageWithConsent(false, true),
+      open: () => popup,
+      sessionStorage: {
+        getItem: (key: string) => storage.get(key) ?? null,
+        removeItem: (key: string) => storage.delete(key),
+        setItem: (key: string, value: string) => storage.set(key, value),
+      },
+    },
+    writable: true,
+  });
+
+  openTrackedWhatsApp("Quero conversar", "hero");
+  context.mock.timers.tick(3_000);
+  await flushMicrotasks();
+
+  assert.equal(navigations.length, 1);
+  const destinationAfterTimeout = navigations[0];
+  assert.equal(readWhatsAppMessage(destinationAfterTimeout), "Quero conversar");
+
+  captureResponse.resolve(Response.json({ ok: true, reference, expiresAt }));
+  await flushMicrotasks();
+
+  assert.equal(storage.size, 0);
+  assert.deepEqual(navigations, [destinationAfterTimeout]);
+  assert.doesNotMatch(navigations[0], /AF-7K9M-4Q2X|PrivateClick123/);
+});
+
+test("the click deadline also bounds a capture already started after consent", async (context) => {
+  context.mock.timers.enable({ apis: ["setTimeout"] });
+  const captureResponse = createDeferred<Response>();
+  const { navigations, popup } = createPopupTarget();
+  let requests = 0;
+  let popupOpenCount = 0;
+  const reference = "AF-7K9M-4Q2X";
+  const expiresAt = new Date(
+    Date.now() + 90 * 24 * 60 * 60 * 1000,
+  ).toISOString();
+
+  globalThis.fetch = () => {
+    requests += 1;
+    return captureResponse.promise;
+  };
+
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      dataLayer: [],
+      location: {
+        pathname: "/terapia-guarulhos",
+        search: "?gclid=EAIaIQobChMIPrivateClick123",
+      },
+      localStorage: localStorageWithConsent(false, true),
+      open: () => {
+        popupOpenCount += 1;
+        return popup;
+      },
+      sessionStorage: {
+        getItem: () => null,
+        removeItem: () => undefined,
+        setItem: () => undefined,
+      },
+    },
+    writable: true,
+  });
+
+  void captureAdClickReference();
+  openTrackedWhatsApp("Quero conversar", "hero");
+
+  assert.equal(requests, 1);
+  context.mock.timers.tick(3_000);
+  await flushMicrotasks();
+
+  assert.equal(popupOpenCount, 1);
+  assert.equal(navigations.length, 1);
+  const destinationAfterTimeout = navigations[0];
+  assert.equal(readWhatsAppMessage(destinationAfterTimeout), "Quero conversar");
+
+  captureResponse.resolve(Response.json({ ok: true, reference, expiresAt }));
+  await flushMicrotasks();
+
+  assert.deepEqual(navigations, [destinationAfterTimeout]);
+  assert.doesNotMatch(navigations[0], /AF-7K9M-4Q2X|PrivateClick123/);
 });
 
 test("an invalid AF response fails open without exposing the click ID", async () => {
@@ -395,6 +566,111 @@ test("a blocked popup falls back to same-tab WhatsApp navigation", async () => {
   assert.equal(sameTabNavigations.length, 1);
   assert.match(sameTabNavigations[0], /AF-7K9M-4Q2X/);
   assert.doesNotMatch(sameTabNavigations[0], /PrivateClick123/);
+});
+
+test("tracking never appends raw click IDs, PII or clinical content to the WhatsApp message", async () => {
+  const { navigations, popup } = createPopupTarget();
+  const reference = "AF-7K9M-4Q2X";
+  const expiresAt = new Date(
+    Date.now() + 90 * 24 * 60 * 60 * 1000,
+  ).toISOString();
+
+  globalThis.fetch = async () =>
+    Response.json({
+      ok: true,
+      reference,
+      expiresAt,
+      name: "PACIENTE-SENTINEL",
+      phone: "11999999999",
+      email: "privado-sentinel@example.invalid",
+      clinicalContent: "DEPRESSAO-GRAVE-SENTINEL",
+    });
+
+  Object.defineProperty(globalThis, "window", {
+    configurable: true,
+    value: {
+      dataLayer: [],
+      location: {
+        hash: "#CONTEUDO-CLINICO-SENTINEL",
+        pathname: "/terapia-guarulhos",
+        search:
+          "?gclid=RAW-GCLID-SENTINEL&gbraid=RAW-GBRAID-SENTINEL&wbraid=RAW-WBRAID-SENTINEL",
+      },
+      localStorage: localStorageWithConsent(false, true),
+      open: () => popup,
+      sessionStorage: {
+        getItem: () => null,
+        removeItem: () => undefined,
+        setItem: () => undefined,
+      },
+    },
+    writable: true,
+  });
+
+  openTrackedWhatsApp("Quero conversar", "hero");
+  await flushAsyncWork();
+
+  assert.equal(navigations.length, 1);
+  const message = readWhatsAppMessage(navigations[0]);
+  assert.equal(
+    message,
+    "Quero conversar\n\nReferência do anúncio: AF-7K9M-4Q2X",
+  );
+  assert.doesNotMatch(
+    message,
+    /RAW-GCLID|RAW-GBRAID|RAW-WBRAID|PACIENTE-SENTINEL|11999999999|privado-sentinel|DEPRESSAO-GRAVE|CONTEUDO-CLINICO/i,
+  );
+});
+
+test("an abort rejection is consumed without an unhandled rejection", async (context) => {
+  context.mock.timers.enable({ apis: ["setTimeout"] });
+  const { navigations, popup } = createPopupTarget();
+  const unhandledRejections: unknown[] = [];
+  const recordUnhandledRejection = (reason: unknown) => {
+    unhandledRejections.push(reason);
+  };
+
+  process.on("unhandledRejection", recordUnhandledRejection);
+  try {
+    globalThis.fetch = (_input, init) =>
+      new Promise<Response>((_resolve, reject) => {
+        init?.signal?.addEventListener(
+          "abort",
+          () => reject(new DOMException("Aborted", "AbortError")),
+          { once: true },
+        );
+      });
+
+    Object.defineProperty(globalThis, "window", {
+      configurable: true,
+      value: {
+        dataLayer: [],
+        location: {
+          pathname: "/terapia-guarulhos",
+          search: "?gclid=EAIaIQobChMIPrivateClick123",
+        },
+        localStorage: localStorageWithConsent(false, true),
+        open: () => popup,
+        sessionStorage: {
+          getItem: () => null,
+          removeItem: () => undefined,
+          setItem: () => undefined,
+        },
+      },
+      writable: true,
+    });
+
+    openTrackedWhatsApp("Quero conversar", "hero");
+    context.mock.timers.tick(3_000);
+    await flushMicrotasks();
+    await new Promise<void>((resolve) => setImmediate(resolve));
+
+    assert.equal(navigations.length, 1);
+    assert.equal(readWhatsAppMessage(navigations[0]), "Quero conversar");
+    assert.deepEqual(unhandledRejections, []);
+  } finally {
+    process.off("unhandledRejection", recordUnhandledRejection);
+  }
 });
 
 test("capture is blocked before advertising consent", async () => {

@@ -22,6 +22,8 @@ export const GOOGLE_ADS_ID = "AW-10966063764";
 export const CONTACT_CONVERSION_SEND_TO =
   "AW-10966063764/eYEhCK_w8uYaEJS1g-0o";
 
+const WHATSAPP_AF_CAPTURE_TIMEOUT_MS = 3_000;
+
 type ContactChannel = "whatsapp" | "phone";
 export type ContactPlacement =
   | "hero"
@@ -81,8 +83,14 @@ function readStoredAdReference(): string | null {
   }
 }
 
-export function captureAdClickReference(): Promise<string | null> {
-  if (typeof window === "undefined" || !hasAdvertisingConsent()) {
+export function captureAdClickReference(
+  signal?: AbortSignal,
+): Promise<string | null> {
+  if (
+    typeof window === "undefined" ||
+    signal?.aborted ||
+    !hasAdvertisingConsent()
+  ) {
     return Promise.resolve(null);
   }
 
@@ -112,9 +120,11 @@ export function captureAdClickReference(): Promise<string | null> {
     body: JSON.stringify(capture),
     cache: "no-store",
     credentials: "same-origin",
+    signal,
   })
     .then(async (response) => {
       if (
+        signal?.aborted ||
         !response.ok ||
         generation !== captureGeneration ||
         !hasAdvertisingConsent()
@@ -132,7 +142,11 @@ export function captureAdClickReference(): Promise<string | null> {
         return null;
       }
 
-      if (generation !== captureGeneration || !hasAdvertisingConsent()) {
+      if (
+        signal?.aborted ||
+        generation !== captureGeneration ||
+        !hasAdvertisingConsent()
+      ) {
         return null;
       }
 
@@ -160,6 +174,40 @@ export function captureAdClickReference(): Promise<string | null> {
     }
   });
   return promise;
+}
+
+type WhatsAppCaptureResult = {
+  reference: string | null;
+  timedOut: boolean;
+};
+
+function captureAdReferenceForWhatsApp(): Promise<WhatsAppCaptureResult> {
+  return new Promise((resolve) => {
+    const controller =
+      typeof AbortController === "undefined" ? null : new AbortController();
+    let settled = false;
+
+    const finish = (result: WhatsAppCaptureResult) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      resolve(result);
+    };
+
+    const timeoutId = setTimeout(() => {
+      controller?.abort();
+      finish({ reference: null, timedOut: true });
+    }, WHATSAPP_AF_CAPTURE_TIMEOUT_MS);
+
+    try {
+      void captureAdClickReference(controller?.signal).then(
+        (reference) => finish({ reference, timedOut: false }),
+        () => finish({ reference: null, timedOut: false }),
+      );
+    } catch {
+      finish({ reference: null, timedOut: false });
+    }
+  });
 }
 
 export function clearAdClickReference() {
@@ -280,14 +328,14 @@ export function openTrackedWhatsApp(
     // becomes the fail-open target after the attribution attempt completes.
   }
 
-  let capturePromise: Promise<string | null>;
+  let capturePromise: Promise<WhatsAppCaptureResult>;
   try {
     // Start capture synchronously in the click handler. Basic Consent remains
     // authoritative inside captureAdClickReference(), so rejected visitors do
     // not create a request or touch advertising storage.
-    capturePromise = captureAdClickReference().catch(() => null);
+    capturePromise = captureAdReferenceForWhatsApp();
   } catch {
-    capturePromise = Promise.resolve(null);
+    capturePromise = Promise.resolve({ reference: null, timedOut: false });
   }
 
   let redirected = false;
@@ -295,8 +343,8 @@ export function openTrackedWhatsApp(
     if (redirected) return;
     redirected = true;
 
-    void capturePromise.then((capturedReference) => {
-      const allowedReference = hasAdvertisingConsent()
+    void capturePromise.then(({ reference: capturedReference, timedOut }) => {
+      const allowedReference = !timedOut && hasAdvertisingConsent()
         ? capturedReference ?? readStoredAdReference()
         : null;
       const messageWithReference = appendAdReference(
