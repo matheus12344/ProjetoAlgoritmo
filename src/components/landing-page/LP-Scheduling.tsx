@@ -8,18 +8,18 @@ import { openTrackedWhatsApp } from "@/lib/contact-tracking";
 const steps = [
   {
     icon: MessageCircle,
-    title: "1. Primeiro Contato",
-    description: "Você entra em contato via WhatsApp ou telefone para tirar dúvidas iniciais."
+    title: "1. Primeiro contato",
+    description: "O primeiro contato pelo WhatsApp ou telefone serve para verificar horários e esclarecer dúvidas práticas. Nesse momento, não é necessário contar toda a sua história nem explicar em detalhes o que está acontecendo."
   },
   {
     icon: Search,
-    title: "2. Breve Triagem",
-    description: "Confirmamos modalidade, horários e dúvidas práticas sobre o atendimento."
+    title: "2. Dúvidas iniciais",
+    description: "Antes do agendamento, você pode confirmar as informações necessárias sobre o atendimento e perguntar o que considerar importante. A ideia é que o início aconteça com clareza, sem transformar esse contato administrativo em uma sessão informal."
   },
   {
     icon: CalendarCheck,
-    title: "3. Primeira Sessão",
-    description: "Agendamos o melhor horário para darmos início ao seu processo terapêutico."
+    title: "3. Primeira sessão",
+    description: "Você não precisa chegar à primeira sessão sabendo exatamente o que dizer ou com uma explicação pronta. Podemos começar por aquilo que motivou sua procura agora. Durante o encontro, posso fazer perguntas para compreender melhor o contexto, as dificuldades atuais e suas expectativas em relação à psicoterapia. Você não precisa falar imediatamente sobre assuntos para os quais ainda não se sente preparado. A primeira sessão também permite conhecer minha forma de trabalho, conversar sobre o que você espera do processo e esclarecer dúvidas. É o começo de uma compreensão, não uma promessa de diagnóstico, solução imediata ou resultado. Ao final, teremos mais elementos para avaliar se o atendimento que ofereço é compatível com aquilo de que você necessita e para conversar sobre possíveis próximos passos."
   }
 ];
 
@@ -44,9 +44,6 @@ export function LPScheduling() {
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
             Como Iniciar seu Atendimento?
           </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            O primeiro contato serve para verificar modalidade, horários e dúvidas práticas.
-          </p>
         </motion.div>
 
         <div className="relative">
